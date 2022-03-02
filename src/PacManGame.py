@@ -1,7 +1,7 @@
-import pygame
+import pygame, time
 from Maze import *
 from Button import *
-from ResourcesProviders import *
+from ResourcesProvider import *
 
 class PacManGame:
     """
@@ -15,11 +15,14 @@ class PacManGame:
 
         # Initialiser le mixeur audio & le resource provider
         pygame.mixer.init()
-        ResourcesProviders()    
+        pygame.font.init()
+        ResourcesProvider()    
 
         # Registre
         self.render_registry = []
         self.on_click_registry = []
+
+        self.clock = pygame.time.Clock()
         
 
         self.grid = Maze(self, (0,0), 0)
@@ -28,7 +31,8 @@ class PacManGame:
         # Création de la fenêtre
         self.window_width = self.grid.width_height_px[0]
         self.window_height = self.grid.width_height_px[1]
-        self.window = pygame.display.set_mode((500,500))
+        print(self.window_width,self.window_height)
+        self.window = pygame.display.set_mode((self.window_width+200,self.window_height))
         pygame.display.set_caption("Super Pac Man GALAXY")
         ## pygame.display.set_icon(ResourcesProviders.get.icon_img)
 
@@ -43,7 +47,8 @@ class PacManGame:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.on_click(event)
             
-            self.render()            
+            self.render()        
+            self.clock.tick()    
        
         pygame.quit()
 
@@ -70,6 +75,8 @@ class PacManGame:
         self.window.fill((0,0,0))
         for elem in self.render_registry:
             elem.render(self.window)
+        
+        self.window.blit(pygame.font.SysFont(None,48).render(str(round(self.clock.get_fps())), True, (255,255,255)), (self.grid.width_height_px[0]+10,0))
         pygame.display.flip()
 
 
