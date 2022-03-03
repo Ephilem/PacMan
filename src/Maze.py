@@ -1,5 +1,7 @@
 from asyncore import read
 import pygame
+from entity.Entity import Entity
+from entity.Pacgom import Pacgom
 from tile.WallTile import *
 
 
@@ -16,8 +18,23 @@ class Maze:
         
         WallTile(self.CASE_SIZE)
         
-        self.level_layout = self.read_level_file(1) 
-        self.width_height_px =  len(self.level_layout[0])*self.CASE_SIZE,len(self.level_layout)*self.CASE_SIZE 
+        level_data = self.read_level_file(1)
+        self.width_height_px =  len(level_data[0])*self.CASE_SIZE,len(level_data)*self.CASE_SIZE 
+
+        self.map_layout = [[None]*len(level_data[0]) for x in range(len(level_data))]        
+        self.entity_registry = [[None]*len(level_data[0]) for x in range(len(level_data))]
+        # Il faut séparer les élément de la map (mur, point de tp, etc..) et les entité (pacgom, point de spawn fantom et pacman)
+        for y, lines in enumerate(level_data):
+            for x, v in enumerate(lines): 
+                if v in ["o","O","s"]:
+                    if v == "o":                        
+                        self.entity_registry[y][x] = Pacgom((x*self.CASE_SIZE, y*self.CASE_SIZE), self.CASE_SIZE)
+
+                    self.map_layout[y][x] = '0'
+                else:
+                    self.map_layout[y][x] = v
+                    
+
 
 
     def read_level_file(self, level):
@@ -25,13 +42,16 @@ class Maze:
             contents = f.read()
             lines = contents.split("\n") 
         return [ [y for y in x] for x in lines]
+        
+                    
+
 
 
     def on_click(self, event):
         pass
 
     def render(self, surface):   
-        for y, lines in enumerate(self.level_layout):
+        for y, lines in enumerate(self.map_layout):
             for x, v in enumerate(lines): 
                 orientation = None
                 if v == "a":
@@ -49,12 +69,21 @@ class Maze:
                 
                 if not orientation is None:
                     surface.blit(WallTile.get_tile(orientation), (x*self.CASE_SIZE, y*self.CASE_SIZE))
-                
+        
                 # pygame.draw.rect(surface, (0,255,0), pygame.Rect(
                 #     x*self.CASE_SIZE, 
                 #     y*self.CASE_SIZE, 
                 #     self.CASE_SIZE, 
                 #     self.CASE_SIZE
                 # ),1)
+        
+        # rendue des entité
+        for y, lines in enumerate(self.entity_registry):
+            for x, v in enumerate(lines): 
+                if not v is None:
+                    v.render(surface)
                     
         pass
+    
+    def spawn_entity(self, pos, entity: Entity):
+        self.entity_registry[pos[1]][pos[0]] = entity

@@ -11,12 +11,8 @@ class ResourcesProvider:
 
         # Charger toutes les images et les son de assets
         self.wall_tile_img = pygame.image.load(ResourcesProvider.__get_asset_path("wall.png"))
-        # self.restart_button_img = pygame.image.load("assets/restart_button.png")
-        # self.win_rond_img = pygame.image.load("assets/win_rond.png")
-        # self.win_croix_img = pygame.image.load("assets/win_croix.png")
-        # self.tie_img = pygame.image.load("assets/Tie.png")
-        # self.icon_img = pygame.image.load("assets/logo.png")
-        # self.button_skin_img = pygame.image.load("assets/button_skin.png")
+        self.pacgom_img = pygame.image.load(ResourcesProvider.__get_asset_path("pacgom.png"))
+
 
         # self.less_go_sound = pygame.mixer.Sound('assets/less_go.mp3')
     

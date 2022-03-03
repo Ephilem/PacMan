@@ -1,31 +1,31 @@
 ebbbbbbbbbbbbfebbbbbbbbbbbbf
-a000000000000aa000000000000a
-a0ebbf0ebbbf0aa0ebbbf0ebbf0a
-a0a  a0a   a0aa0a   a0a  a0a
-a0cbbd0cbbbd0cd0cbbbd0cbbd0a
-a00000000000000000000000000a
-a0ebbf0ef0ebbbbbbf0ef0ebbf0a
-a0cbbd0aa0cbbfebbd0aa0cbbd0a
-a000000aa0000aa0000aa000000a
-cbbbbf0acbbf0aa0ebbda0ebbbbd
-     a0aebbd0cd0cbbfa0a
-     a0aa0000000000aa0a
-     a0aa0ebb00bbf0aa0a
-bbbbbd0cd0a000000a0cd0cbbbbb
-      0000a000000a0000      
-bbbbbf0ef0a000000a0ef0ebbbbb
-     a0aa0cbbbbbbd0aa0a
-     a0aa0000000000aa0a
-     a0aa0ebbbbbbf0aa0a
-ebbbbd0cd0cbbfebbd0cd0cbbbbf
-a000000000000aa000000000000a
-a0ebbf0ebbbf0aa0ebbbf0ebbf0a
-a0cbfa0cbbbd0cd0cbbbd0aebd0a
-a000aa0000000000000000aa000a
-cbf0aa0ef0ebbbbbbf0ef0aa0ebd
-ebd0cd0aa0cbbfebbd0aa0cd0cbf
-a000000aa0000aa0000aa000000a
-a0ebbbbdcbbf0aa0ebbdcbbbbf0a
-a0cbbbbbbbbd0cd0cbbbbbbbbd0a
-a00000000000000000000000000a
+aooooooooooooaaooooooooooooa
+aoebbfoebbbfoaaoebbbfoebbfoa
+aoa  aoa   aoaaoa   aoa  aoa
+aocbbdocbbbdocdocbbbdocbbdoa
+aooooooooooooooooooooooooooa
+aoebbfoefoebbbbbbfoefoebbfoa
+aocbbdoaaocbbfebbdoaaocbbdoa
+aooooooaaooooaaooooaaooooooa
+cbbbbfoacbbfoaaoebbdaoebbbbd
+     aoaebbdocdocbbfaoa
+     aoaaooooooooooaaoa
+     aoaaoebboobbfoaaoa
+bbbbbdocdoaooooooaocdocbbbbb
+      ooooaooooooaoooo      
+bbbbbfoefoaooooooaoefoebbbbb
+     aoaaocbbbbbbdoaaoa
+     aoaaooooooooooaaoa
+     aoaaoebbbbbbfoaaoa
+ebbbbdocdocbbfebbdocdocbbbbf
+aooooooooooooaaooooooooooooa
+aoebbfoebbbfoaaoebbbfoebbfoa
+aocbfaocbbbdocdocbbbdoaebdoa
+aoooaaooooooooooooooooaaoooa
+cbfoaaoefoebbbbbbfoefoaaoebd
+ebdocdoaaocbbfebbdoaaocdocbf
+aooooooaaooooaaooooaaooooooa
+aoebbbbdcbbfoaaoebbdcbbbbfoa
+aocbbbbbbbbdocdocbbbbbbbbdoa
+aooooooooooooooooooooooooooa
 cbbbbbbbbbbbbbbbbbbbbbbbbbbd

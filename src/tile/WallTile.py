@@ -24,7 +24,7 @@ class WallTile:
         w, h = rect.size
         dx = tile_size[0] + 0
         dy = tile_size[1] + 0
-        print(w, h)
+        print("before: "+str(w), str(h))
 
         reader_slot = 0
         for y in range(y0, h, dy):
@@ -33,11 +33,11 @@ class WallTile:
                 if not key_in_tiles_dict is None:
                     tile = pygame.Surface(tile_size)
                     tile.blit(ResourcesProvider.get.wall_tile_img, (0,0), (x, y, *tile_size))   
-                    pygame.transform.scale(tile, (case_size, case_size))      
+                    tile = pygame.transform.scale(tile, (case_size, case_size))      
                     WallTile.tiles[key_in_tiles_dict]['tile'] = tile       
                 reader_slot += 1
         
-        print(self.tiles)
+        print("after: "+str(WallTile.get_tile("n_s").get_rect().size))
     
     def _finding_key_with_slot(reader_slot):
         for k, v in WallTile.tiles.items():
