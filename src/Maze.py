@@ -12,7 +12,7 @@ class Maze:
         game.render_registry.append(self)
         game.on_click_registry.append(self)
 
-        self.CASE_SIZE = 30
+        self.CASE_SIZE = 15
         
         WallTile(self.CASE_SIZE)
         
@@ -50,13 +50,6 @@ class Maze:
                 if not orientation is None:
                     surface.blit(WallTile.get_tile(orientation), (x*self.CASE_SIZE, y*self.CASE_SIZE))
                 
-
-                # pygame.draw.rect(surface, color, pygame.Rect(
-                #     x*self.CASE_SIZE, 
-                #     y*self.CASE_SIZE, 
-                #     self.CASE_SIZE, 
-                #     self.CASE_SIZE
-                # ))
                 # pygame.draw.rect(surface, (0,255,0), pygame.Rect(
                 #     x*self.CASE_SIZE, 
                 #     y*self.CASE_SIZE, 

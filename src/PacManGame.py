@@ -25,12 +25,12 @@ class PacManGame:
         self.clock = pygame.time.Clock()
         
 
-        self.grid = Maze(self, (0,0), 0)
+        self.maze = Maze(self, (0,0), 0)
 
 
         # Création de la fenêtre
-        self.window_width = self.grid.width_height_px[0]
-        self.window_height = self.grid.width_height_px[1]
+        self.window_width = self.maze.width_height_px[0]
+        self.window_height = self.maze.width_height_px[1]
         print(self.window_width,self.window_height)
         self.window = pygame.display.set_mode((self.window_width+200,self.window_height))
         pygame.display.set_caption("Super Pac Man GALAXY")
@@ -56,7 +56,7 @@ class PacManGame:
     def on_key_press(self, event):
         # Quand on appuis sur entré, on recommence la partie
         if event.key == pygame.K_RETURN:
-            self.grid.reset()
+            self.maze.reset()
             
 
     def on_click(self, event):
@@ -76,7 +76,7 @@ class PacManGame:
         for elem in self.render_registry:
             elem.render(self.window)
         
-        self.window.blit(pygame.font.SysFont(None,48).render(str(round(self.clock.get_fps())), True, (255,255,255)), (self.grid.width_height_px[0]+10,0))
+        self.window.blit(pygame.font.SysFont(None,48).render(str(round(self.clock.get_fps())), True, (255,255,255)), (self.maze.width_height_px[0]+10,0))
         pygame.display.flip()
 
 
