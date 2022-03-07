@@ -19,7 +19,7 @@ class Entity:
                 self.frame_id += 1
                 if self.frame_id >= len(self.textures):
                     self.frame_id = 0
-                self.frame = self.textures[0]
+                self.frame = self.textures[self.frame_id]
     
     @abstractmethod
     def render(self):

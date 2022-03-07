@@ -2,6 +2,7 @@ from asyncore import read
 import pygame
 from entity.Entity import Entity
 from entity.Pacgom import Pacgom
+from entity.SuperPacgom import SuperPacgom
 from tile.WallTile import *
 
 
@@ -29,6 +30,8 @@ class Maze:
                 if v in ["o","O","s"]:
                     if v == "o":                        
                         self.entity_registry[y][x] = Pacgom((x*self.CASE_SIZE, y*self.CASE_SIZE), self.CASE_SIZE)
+                    elif v == "O":
+                        self.entity_registry[y][x] = SuperPacgom((x*self.CASE_SIZE, y*self.CASE_SIZE), self.CASE_SIZE)
 
                     self.map_layout[y][x] = '0'
                 else:

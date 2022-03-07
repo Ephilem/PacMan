@@ -6,22 +6,22 @@ aocbbdocbbbdocdocbbbdocbbdoa
 aooooooooooooooooooooooooooa
 aoebbfoefoebbbbbbfoefoebbfoa
 aocbbdoaaocbbfebbdoaaocbbdoa
-aooooooaaooooaaooooaaooooooa
+aOoooooaaooooaaooooaaooooooa
 cbbbbfoacbbfoaaoebbdaoebbbbd
      aoaebbdocdocbbfaoa
-     aoaaooooooooooaaoa
-     aoaaoebboobbfoaaoa
-bbbbbdocdoaooooooaocdocbbbbb
-      ooooaooooooaoooo      
-bbbbbfoefoaooooooaoefoebbbbb
-     aoaaocbbbbbbdoaaoa
-     aoaaooooooooooaaoa
+     aoaa0000000000aaoa
+     aoaa0ebb00bbf0aaoa
+bbbbbdocd0a000000a0cdocbbbbb
+      o000a000000a000o      
+bbbbbfoef0a000000a0efoebbbbb
+     aoaa0cbbbbbbd0aaoa
+     aoaa0000000000aaoa
      aoaaoebbbbbbfoaaoa
 ebbbbdocdocbbfebbdocdocbbbbf
 aooooooooooooaaooooooooooooa
 aoebbfoebbbfoaaoebbbfoebbfoa
 aocbfaocbbbdocdocbbbdoaebdoa
-aoooaaooooooooooooooooaaoooa
+aoooaaooooooooosooooooaaoooa
 cbfoaaoefoebbbbbbfoefoaaoebd
 ebdocdoaaocbbfebbdoaaocdocbf
 aooooooaaooooaaooooaaooooooa

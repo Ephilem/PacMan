@@ -24,6 +24,7 @@ class WallTile:
         w, h = rect.size
         dx = tile_size[0] + 0
         dy = tile_size[1] + 0
+        print("before: "+str(w), str(h))
 
         reader_slot = 0
         for y in range(y0, h, dy):
@@ -36,6 +37,7 @@ class WallTile:
                     WallTile.tiles[key_in_tiles_dict]['tile'] = tile       
                 reader_slot += 1
         
+        print("after: "+str(WallTile.get_tile("n_s").get_rect().size))
     
     def _finding_key_with_slot(reader_slot):
         for k, v in WallTile.tiles.items():
