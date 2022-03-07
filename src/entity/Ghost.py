@@ -4,10 +4,16 @@ from entity.Entity import Entity
 
 class Ghost(Entity):
 
-    def __init__(self, ghost_type, pos, case_size):
+    def __init__(self, ghost_type, maze_pos, case_size):
         if ghost_type == "blinky":
             images = None
-        super().__init__(images, pos, ticks_between_frame=30)
+        elif ghost_type == "clyde":
+            images = None
+        elif ghost_type == "inky":
+            images = None
+        elif ghost_type == "pinky":
+            images = None
+        super().__init__(images, maze_pos, ticks_between_frame=30)
         self.mode = "chasing" # les modes : chasing, running_away, eated
 
     @abstractmethod
@@ -16,3 +22,9 @@ class Ghost(Entity):
 
     def render(self, surface):
         surface.blit(self.frame, self.pos)
+    
+    
+
+    
+
+    

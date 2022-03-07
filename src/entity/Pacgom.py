@@ -8,5 +8,5 @@ class Pacgom(Entity):
         super().__init__([ResourcesProvider.get.pacgom_img], pos)
         self.case_size = case_size
 
-    def render(self, surface):
-        surface.blit(pygame.transform.scale(self.frame, (self.case_size, self.case_size)) , self.pos)
+    def render(self, surface, pos_to_render):
+        surface.blit(pygame.transform.scale(self.frame, (self.case_size, self.case_size)) , pos_to_render)

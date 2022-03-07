@@ -8,6 +8,12 @@ Entre temps - Premier niveau & rendue du labirythe a partir d'un fichier avec un
 03/03/2022 - Début du système d'entité et correction du problème au changement de taille du labirythe<br/>
 Correction du bug fini. Un système d'entité fonctionnel, il est trop bien. Début des design de fantome
 
+Entre temps - réflexions sur tout les entité dans le jeu et création de la super pacgom
+
+07/03/2022 - Commencer pacman - On a commencer le système de mouvement pour tout le monde. Correction et modification légère du code
+
+
+
 ## Caractère
 
 0 = vide

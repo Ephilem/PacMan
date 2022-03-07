@@ -2,6 +2,7 @@ from asyncore import read
 import pygame
 from entity.Entity import Entity
 from entity.Pacgom import Pacgom
+from entity.Pacman import Pacman
 from entity.SuperPacgom import SuperPacgom
 from tile.WallTile import *
 
@@ -12,10 +13,11 @@ class Maze:
     """
 
     def __init__(self, game, pos, level):
-        game.render_registry.append(self)
-        game.on_click_registry.append(self)
+        self.game = game
+        self.game.render_registry.append(self)
+        self.game.on_click_registry.append(self)
 
-        self.CASE_SIZE = 15
+        self.CASE_SIZE = 25
         
         WallTile(self.CASE_SIZE)
         
@@ -29,9 +31,11 @@ class Maze:
             for x, v in enumerate(lines): 
                 if v in ["o","O","s"]:
                     if v == "o":                        
-                        self.entity_registry[y][x] = Pacgom((x*self.CASE_SIZE, y*self.CASE_SIZE), self.CASE_SIZE)
+                        self.entity_registry[y][x] = Pacgom((x, y), self.CASE_SIZE)
                     elif v == "O":
-                        self.entity_registry[y][x] = SuperPacgom((x*self.CASE_SIZE, y*self.CASE_SIZE), self.CASE_SIZE)
+                        self.entity_registry[y][x] = SuperPacgom((x, y), self.CASE_SIZE)
+                    elif v == "s":
+                        self.entity_registry[y][x] = Pacman(self.game, (x, y), self.CASE_SIZE)
 
                     self.map_layout[y][x] = '0'
                 else:
@@ -45,10 +49,6 @@ class Maze:
             contents = f.read()
             lines = contents.split("\n") 
         return [ [y for y in x] for x in lines]
-        
-                    
-
-
 
     def on_click(self, event):
         pass
@@ -80,13 +80,13 @@ class Maze:
                 #     self.CASE_SIZE
                 # ),1)
         
-        # rendue des entité
+        # rendue des entités
         for y, lines in enumerate(self.entity_registry):
             for x, v in enumerate(lines): 
                 if not v is None:
-                    v.render(surface)
+                    v.render(surface, (x*self.CASE_SIZE, y*self.CASE_SIZE))
                     
         pass
     
-    def spawn_entity(self, pos, entity: Entity):
-        self.entity_registry[pos[1]][pos[0]] = entity
+    def get_map_element(self, maze_pos):
+        return self.map_layout[maze_pos[1]][maze_pos[0]] 

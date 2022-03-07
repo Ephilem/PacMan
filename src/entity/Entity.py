@@ -3,9 +3,9 @@ from abc import abstractmethod
 
 class Entity:
  
-    def __init__(self, textures, pos, ticks_between_frame=0):
+    def __init__(self, textures, maze_pos, ticks_between_frame=0):
         self.textures = textures
-        self.pos = pos
+        self.maze_pos = maze_pos
         self.frame = textures[0]
         self.frame_id = 0
         self.tick = 0
@@ -24,3 +24,9 @@ class Entity:
     @abstractmethod
     def render(self):
         pass
+
+    def change_texture(self, textures):
+        self.textures = textures
+        self.frame = textures[0]
+        self.frame_id = 0
+        self.tick = 0

@@ -21,6 +21,7 @@ class PacManGame:
         # Registre
         self.render_registry = []
         self.on_click_registry = []
+        self.on_key_press_registry = []
 
         self.clock = pygame.time.Clock()
         
@@ -54,11 +55,12 @@ class PacManGame:
 
     
     def on_key_press(self, event):
-        # Quand on appuis sur entré, on recommence la partie
-        if event.key == pygame.K_RETURN:
-            self.maze.reset()
+        for elem in self.on_key_press_registry:
+            elem.on_key_press(event)
             
-
+        
+            
+    
     def on_click(self, event):
         """
         Call les on_click de tout les élément dans le registre
@@ -71,6 +73,7 @@ class PacManGame:
     def render(self):
         """
         Call les render de tout les élément dans le registre
+        Render fait aussi service de ticking
         """
         self.window.fill((0,0,0))
         for elem in self.render_registry:
@@ -79,7 +82,7 @@ class PacManGame:
         self.window.blit(pygame.font.SysFont(None,48).render(str(round(self.clock.get_fps())), True, (255,255,255)), (self.maze.width_height_px[0]+10,0))
         pygame.display.flip()
 
-
+ 
 
 
 
