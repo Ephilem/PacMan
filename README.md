@@ -12,7 +12,7 @@ Entre temps - réflexions sur tout les entité dans le jeu et création de la su
 
 07/03/2022 - Commencer pacman - On a commencer le système de mouvement pour tout le monde. Correction et modification légère du code
 
-
+Entre temps - Bon début de mouvement de pacman (il faut corriger le bug d'animation et de mouvement)
 
 ## Caractère
 
@@ -25,6 +25,6 @@ d = angle n_w ┘<br/>
 e = angle s_e ┌<br/>
 f = angle s_w ┐<br/>
 
-s = point de départ<br/>
+s = pacman<br/>
 o = pacgom<br/>
 O = super pacgom

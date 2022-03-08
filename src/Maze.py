@@ -36,6 +36,7 @@ class Maze:
                         self.entity_registry[y][x] = SuperPacgom((x, y), self.CASE_SIZE)
                     elif v == "s":
                         self.entity_registry[y][x] = Pacman(self.game, (x, y), self.CASE_SIZE)
+                        self.map_layout[y][x] = "0"
 
                     self.map_layout[y][x] = '0'
                 else:
