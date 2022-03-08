@@ -14,6 +14,8 @@ Entre temps - réflexions sur tout les entité dans le jeu et création de la su
 
 Entre temps - Bon début de mouvement de pacman (il faut corriger le bug d'animation et de mouvement)
 
+08/03/2022 - Commencer l'ia - on a commencer l'ia avec des optimisation graphque en plus
+
 ## Caractère
 
 0 = vide
@@ -27,4 +29,10 @@ f = angle s_w ┐<br/>
 
 s = pacman<br/>
 o = pacgom<br/>
-O = super pacgom
+O = super pacgom<br/>
+
+P = pinky<br/>
+I = inky<br/>
+B = blinky<br/>
+C = clyde<br/>
+

@@ -28,7 +28,7 @@ class Pacman(MovingEntity):
     def render(self, surface, pos_to_render):
         surface.blit(self.frame, self.get_pos_to_render(pos_to_render))
         self.tick_movement_system(self)
-        if not self.moving_direction is None:
+        if not self.direction_to_go is None:
             super().tick_animation()
 
         # IA (car render fait aussi office de ticking)
@@ -42,10 +42,8 @@ class Pacman(MovingEntity):
                 v = self.game.maze.get_map_element((self.maze_pos[0], self.maze_pos[1]-1))
             if self.direction_to_go == "down" and self.game.maze.get_map_element((self.maze_pos[0], self.maze_pos[1]+1)) == "0":
                 v = self.game.maze.get_map_element((self.maze_pos[0], self.maze_pos[1]+1))
-            print("---")
-            print(v)
             if v == "0":
                 self.move(self.direction_to_go)
             else:
                 self.direction_to_go = None
-        print(f"\nDirection to go : {self.direction_to_go}\nMaze_pos : {self.maze_pos}\nMap zoning:\n {self.game.maze.get_map_element((self.maze_pos[0], self.maze_pos[1]-1))}\n{self.game.maze.get_map_element((self.maze_pos[0]-1, self.maze_pos[1]))}@{self.game.maze.get_map_element((self.maze_pos[0]+1, self.maze_pos[1]))}\n {self.game.maze.get_map_element((self.maze_pos[0], self.maze_pos[1]+1))}")
+        #print(f"\nDirection to go : {self.direction_to_go}\nMaze_pos : {self.maze_pos}\nMap zoning:\n {self.game.maze.get_map_element((self.maze_pos[0], self.maze_pos[1]-1))}\n{self.game.maze.get_map_element((self.maze_pos[0]-1, self.maze_pos[1]))}@{self.game.maze.get_map_element((self.maze_pos[0]+1, self.maze_pos[1]))}\n {self.game.maze.get_map_element((self.maze_pos[0], self.maze_pos[1]+1))}")

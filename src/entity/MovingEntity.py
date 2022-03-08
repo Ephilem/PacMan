@@ -31,7 +31,7 @@ class MovingEntity(Entity):
     def tick_movement_system(self, entity_ticked):
         if self.is_moving:
             self.sleep_tick -= 1
-            if self.sleep_tick == 0:
+            if self.sleep_tick <= 0:
                 self.sleep_tick = self.DEFAULT_SLEEP_TICK
                 self.is_moving = False
                 self.change_maze_pos(self.moving_to, entity_ticked)
@@ -54,6 +54,6 @@ class MovingEntity(Entity):
         
     
     def change_maze_pos(self, new_maze_pos, entity_to_move):
-        self.game.maze.entity_registry[self.maze_pos[1]][self.maze_pos[0]] = None
+        self.game.maze.entity_layout[self.maze_pos[1]][self.maze_pos[0]] = None
         self.maze_pos = new_maze_pos
-        self.game.maze.entity_registry[self.maze_pos[1]][self.maze_pos[0]] = entity_to_move
+        self.game.maze.entity_layout[self.maze_pos[1]][self.maze_pos[0]] = entity_to_move

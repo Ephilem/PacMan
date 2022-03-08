@@ -22,7 +22,7 @@ class Entity:
                 self.frame = self.textures[self.frame_id]
     
     @abstractmethod
-    def render(self):
+    def render(self, surface, pos_to_render):
         pass
 
     def change_texture(self, textures):
