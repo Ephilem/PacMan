@@ -27,9 +27,12 @@ class Pacman(MovingEntity):
 
     def render(self, surface, pos_to_render):
         surface.blit(self.frame, self.get_pos_to_render(pos_to_render))
-        self.tick_movement_system(self)
         if not self.direction_to_go is None:
             super().tick_animation()
+        
+        self.tick_movement_system(self)
+        if self.is_moving and self.sleep_tick <= 1:
+            self.game.maze.calcul_ai_grid() 
 
         # IA (car render fait aussi office de ticking)
         if not self.is_moving:

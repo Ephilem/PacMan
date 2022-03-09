@@ -48,7 +48,7 @@ class PacManGame():
                     self.on_click(event)
             
             self.render()        
-            self.clock.tick()    
+            self.clock.tick(100)    
        
         pygame.quit()
 

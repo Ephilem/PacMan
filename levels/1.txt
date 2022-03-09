@@ -1,12 +1,12 @@
 ebbbbbbbbbbbbfebbbbbbbbbbbbf
-aooooooooooooaaooooooooooooa
+asoooooooooooaaooooooooooooa
 aoebbfoebbbfoaaoebbbfoebbfoa
 aoa  aoa   aoaaoa   aoa  aoa
 aocbbdocbbbdocdocbbbdocbbdoa
 aooooooooooooooooooooooooooa
 aoebbfoefoebbbbbbfoefoebbfoa
 aocbbdoaaocbbfebbdoaaocbbdoa
-aOoooooaaooooaaooooaaooooooa
+aOoooooaaooooaaooooaaoooBooa
 cbbbbfoacbbfoaaoebbdaoebbbbd
      aoaebbdocdocbbfaoa
      aoaa0000000000aaoa
@@ -21,7 +21,7 @@ ebbbbdocdocbbfebbdocdocbbbbf
 aooooooooooooaaooooooooooooa
 aoebbfoebbbfoaaoebbbfoebbfoa
 aocbfaocbbbdocdocbbbdoaebdoa
-aoooaaooooooooosooooooaaoooa
+aoooaaooooooooooooooooaaoooa
 cbfoaaoefoebbbbbbfoefoaaoebd
 ebdocdoaaocbbfebbdoaaocdocbf
 aooooooaaooooaaooooaaooooooa
