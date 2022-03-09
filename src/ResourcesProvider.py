@@ -13,9 +13,10 @@ class ResourcesProvider:
         self.wall_tile_img = pygame.image.load(ResourcesProvider.__get_asset_path("wall.png"))
         self.pacgom_img = pygame.image.load(ResourcesProvider.__get_asset_path("pacgom.png"))
         self.super_pacgom_img_frames = ResourcesProvider.img_to_animation_frames(pygame.image.load(ResourcesProvider.__get_asset_path("super_pacgom.png")), 16)
-        self.pacman_eating_img_frames = ResourcesProvider.img_to_animation_frames(pygame.image.load(ResourcesProvider.__get_asset_path("pacman_eating.png")), 14)
+        self.pacman_eating_img_frames = ResourcesProvider.img_to_animation_frames(pygame.image.load(ResourcesProvider.__get_asset_path("pacman_eating.png")), 13)
 
         self.blinky_img_frames = ResourcesProvider.img_to_animation_frames(pygame.image.load(ResourcesProvider.__get_asset_path("blinky.png")), 15)
+        self.clyde_img_frames = ResourcesProvider.img_to_animation_frames(pygame.image.load(ResourcesProvider.__get_asset_path("clyde.png")), 15)
 
         # self.less_go_sound = pygame.mixer.Sound('assets/less_go.mp3')
 
@@ -43,7 +44,8 @@ class ResourcesProvider:
         dy = frames_size[1] + 0
 
         for y in range(y0, h, dy):
-            frame = pygame.Surface(frames_size)
+            frame = pygame.Surface(frames_size, flags=pygame.SRCALPHA)
+            frame.fill((0,0,0,0))
             frame.blit(image, (0,0), (0, y, *frames_size))    
             frames.append(frame)
         return frames

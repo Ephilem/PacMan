@@ -29,7 +29,6 @@ class PacManGame():
         # Création de la fenêtre
         self.window_width = self.maze.width_height_px[0]
         self.window_height = self.maze.width_height_px[1]
-        print(self.window_width,self.window_height)
         self.window = pygame.display.set_mode((self.window_width+200,self.window_height))
         pygame.display.set_caption("Super Pac Man GALAXY")
         ## pygame.display.set_icon(ResourcesProviders.get.icon_img)
@@ -55,9 +54,7 @@ class PacManGame():
     
     def on_key_press(self, event):
         for elem in self.on_key_press_registry:
-            elem.on_key_press(event)                 
-
-
+            elem.on_key_press(event)      
 
     def on_click(self, event):
         """

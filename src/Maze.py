@@ -36,27 +36,25 @@ class Maze:
         self.map_layout = [[None]*len(self.level_data[0]) for x in range(len(self.level_data))]     
         
         self.pacman = None   
-        self.entity_registry = [[None]*len(self.level_data[0]) for x in range(len(self.level_data))]
-        self.ghost_layout = [[None]*len(self.level_data[0]) for x in range(len(self.level_data))]
+        self.entity_registry = []
         # Il faut séparer les élément de la map (mur, point de tp, etc..) et les entité (pacgom, point de spawn fantom et pacman)
         for y, lines in enumerate(self.level_data):
             for x, v in enumerate(lines): 
-                if v in ["o","O","s"]:
+                if v in ["o","O","s","I","P","C","B"]:
                     if v == "o":                        
-                        self.entity_layout[y][x] = Pacgom((x, y), self.CASE_SIZE)
+                        self.entity_registry.append(Pacgom((x, y), self.CASE_SIZE))
                     elif v == "O":
-                        self.entity_layout[y][x] = SuperPacgom((x, y), self.CASE_SIZE)
+                        self.entity_registry.append(SuperPacgom((x, y), self.CASE_SIZE))
                     elif v == "s":
                         self.pacman = Pacman(self.game, (x, y), self.CASE_SIZE)
-                        self.entity_layout[y][x] = self.pacman
                     elif v == "P":
-                        self.ghost_layout[y][x] = Pinky(self.game, (x, y), self.CASE_SIZE)
+                        self.entity_registry.append(Pinky(self.game, (x, y), self.CASE_SIZE))
                     elif v == "I":
-                        self.ghost_layout[y][x] = Inky(self.game, (x, y), self.CASE_SIZE)
+                        self.entity_registry.append(Inky(self.game, (x, y), self.CASE_SIZE))
                     elif v == "B":
-                        self.ghost_layout[y][x] = Blinky(self.game, (x, y), self.CASE_SIZE)
+                        self.entity_registry.append(Blinky(self.game, (x, y), self.CASE_SIZE))
                     elif v == "C":
-                        self.ghost_layout[y][x] = Clyde(self.game, (x, y), self.CASE_SIZE)
+                        self.entity_registry.append(Clyde(self.game, (x, y), self.CASE_SIZE))
                     self.map_layout[y][x] = '0'
                 else:
                     orientation = None
@@ -78,7 +76,7 @@ class Maze:
                     self.map_layout[y][x] = v
                             
         self.ai_to_render = pygame.Surface((self.width_height_px[0], self.width_height_px[1]), flags=pygame.SRCALPHA) 
-        self.calcul_ai_grid()
+        self.calcul_ai_grid(self.pacman.maze_pos)
 
 
     def read_level_file(self, level):
@@ -94,14 +92,13 @@ class Maze:
         surface.blit(self.map_to_render, (0,0))
         
         # rendue des entités
-        for y, lines in enumerate(self.entity_layout):
-            for x, v in enumerate(lines): 
-                if not v is None:
-                    v.render(surface, (x*self.CASE_SIZE, y*self.CASE_SIZE))
-        
-        # rendue des phantom
-                    
-        #surface.blit(self.ai_to_render, (0,0))
+        for entity in self.entity_registry:
+            entity.render(surface, (entity.maze_pos[0]*self.CASE_SIZE, entity.maze_pos[1]*self.CASE_SIZE))
+
+        # rendue de pacman appart pour être sur qu'il soit au premier plan
+        self.pacman.render(surface, (self.pacman.maze_pos[0]*self.CASE_SIZE, self.pacman.maze_pos[1]*self.CASE_SIZE))
+
+        surface.blit(self.ai_to_render, (0,0))
     
     def get_map_element(self, maze_pos):
         return self.map_layout[maze_pos[1]][maze_pos[0]] 
@@ -109,11 +106,10 @@ class Maze:
     def get_ai_value(self, maze_pos):
         return self.ai_grid[maze_pos[1]][maze_pos[0]] 
     
-    def calcul_ai_grid(self):
+    def calcul_ai_grid(self, maze_pos):
         self.ai_grid = [[999]*(len(self.level_data[0])+5) for x in range(len(self.level_data)+5)]  
         #self.ai_to_render = pygame.Surface((self.width_height_px[0], self.width_height_px[1]), flags=pygame.SRCALPHA)
         #self.ai_to_render.fill((0,0,0,0))
-        maze_pos = self.pacman.maze_pos
         i = 1
         to_treat = [[maze_pos],[]]
         for targets in to_treat:
@@ -142,7 +138,6 @@ class Maze:
                 i += 1
         self.ai_grid[maze_pos[1]][maze_pos[0]] = 0    
         #self.ai_to_render.blit(pygame.font.SysFont(None,18).render(str(0), True, (255,255,0)), ((maze_pos[0])*self.CASE_SIZE+2, (maze_pos[1])*self.CASE_SIZE+2))
-        #print(maze_pos)
 
 
         

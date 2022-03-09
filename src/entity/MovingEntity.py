@@ -54,6 +54,4 @@ class MovingEntity(Entity):
         
     
     def change_maze_pos(self, new_maze_pos, entity_to_move):
-        self.game.maze.entity_layout[self.maze_pos[1]][self.maze_pos[0]] = None
         self.maze_pos = new_maze_pos
-        self.game.maze.entity_layout[self.maze_pos[1]][self.maze_pos[0]] = entity_to_move
