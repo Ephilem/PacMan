@@ -74,7 +74,9 @@ class PacManGame():
         for elem in self.render_registry:
             elem.render(self.window)
         self.window.blit(pygame.font.SysFont(None,48).render(str(round(self.clock.get_fps())), True, (255,255,255)), (self.maze.width_height_px[0]+10,0))
+        self.window.blit(pygame.font.SysFont(None,48).render(str(round(self.clock.get_time())), True, (255,255,255)), (self.maze.width_height_px[0]+10,30))
         pygame.display.flip()
+
 
 
 

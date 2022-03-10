@@ -73,6 +73,10 @@ class Maze:
                     
                     if not orientation is None:
                         self.map_to_render.blit(WallTile.get_tile(orientation), (x*self.CASE_SIZE, y*self.CASE_SIZE))
+                    
+                    if v == "o":
+                        self.map_to_render.blit()
+
                     self.map_layout[y][x] = v
                             
         self.ai_to_render = pygame.Surface((self.width_height_px[0], self.width_height_px[1]), flags=pygame.SRCALPHA) 
@@ -105,6 +109,49 @@ class Maze:
     
     def get_ai_value(self, maze_pos):
         return self.ai_grid[maze_pos[1]][maze_pos[0]] 
+    
+    def render_map(self):
+         # Il faut séparer les élément de la map (mur, point de tp, etc..) et les entité (pacgom, point de spawn fantom et pacman)
+        for y, lines in enumerate(self.level_data):
+            for x, v in enumerate(lines): 
+                if v in ["o","O","s","I","P","C","B"]:
+                    if v == "o":                        
+                        self.entity_registry.append(Pacgom((x, y), self.CASE_SIZE))
+                    elif v == "O":
+                        self.entity_registry.append(SuperPacgom((x, y), self.CASE_SIZE))
+                    elif v == "s":
+                        self.pacman = Pacman(self.game, (x, y), self.CASE_SIZE)
+                    elif v == "P":
+                        self.entity_registry.append(Pinky(self.game, (x, y), self.CASE_SIZE))
+                    elif v == "I":
+                        self.entity_registry.append(Inky(self.game, (x, y), self.CASE_SIZE))
+                    elif v == "B":
+                        self.entity_registry.append(Blinky(self.game, (x, y), self.CASE_SIZE))
+                    elif v == "C":
+                        self.entity_registry.append(Clyde(self.game, (x, y), self.CASE_SIZE))
+                    self.map_layout[y][x] = '0'
+                else:
+                    orientation = None
+                    if v == "a":
+                        orientation = "n_s"
+                    if v == "b":
+                        orientation = "e_w"
+                    if v == "c":
+                        orientation = "n_e"
+                    if v == "d":
+                        orientation = "n_w"
+                    if v == "e":
+                        orientation = "s_e"
+                    if v == "f":
+                        orientation = "s_w"
+                    
+                    if not orientation is None:
+                        self.map_to_render.blit(WallTile.get_tile(orientation), (x*self.CASE_SIZE, y*self.CASE_SIZE))
+                    
+                    if v == "o":
+                        self.map_to_render.blit()
+
+                    self.map_layout[y][x] = v
     
     def calcul_ai_grid(self, maze_pos):
         self.ai_grid = [[999]*(len(self.level_data[0])+5) for x in range(len(self.level_data)+5)]  

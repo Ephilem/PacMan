@@ -42,7 +42,6 @@ class Clyde(Ghost):
                 final.remove(direction)
             if direction == "down" and self.game.maze.get_map_element((self.maze_pos[0],self.maze_pos[1]+1)) != "0":
                 final.remove(direction)
-        print(final, self.looking_direction)
         return final
     
     def get_opposite_direction(self, direction):
