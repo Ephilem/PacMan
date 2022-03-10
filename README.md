@@ -16,6 +16,10 @@ Entre temps - Bon début de mouvement de pacman (il faut corriger le bug d'anima
 
 08/03/2022 - Commencer l'ia - on a commencer l'ia avec des optimisation graphque en plus
 
+Entre temps - optimisation, meilleur mouvement de pacman & ia basique de blinky et clyde 
+
+10/03/2022 - ia de pinky en cours- système de checkpoint au départ
+
 ## Caractère
 
 0 = vide
@@ -36,3 +40,7 @@ I = inky<br/>
 B = blinky<br/>
 C = clyde<br/>
 
+/ = pinky checkpoint<br/>
+* = inky checkpoint<br/>
+- = blinky checkpoint<br/>
++ = clyde checkpoint<br/>

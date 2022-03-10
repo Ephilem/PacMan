@@ -40,4 +40,7 @@ class Entity:
             self.__frame_min = min
             self.frame_id = min
             self.frame = self.textures[min]
+
+    def get_frame_min_max(self):
+        return self.__frame_min, self.__frame_max
         

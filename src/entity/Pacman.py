@@ -20,6 +20,10 @@ class Pacman(MovingEntity):
         self.tick_movement_system(self)
         if self.is_moving and self.sleep_tick <= 1:
             self.game.maze.calcul_ai_grid(self.moving_to) 
+            # Vérif si il y a une pacgom
+            potential_pacgom = [x for x in self.game.maze.pacgoms if x.maze_pos == self.moving_to]
+            if len(potential_pacgom) != 0:
+                self.game.maze.pacgoms.remove(potential_pacgom[0])
 
         # IA (car render fait aussi office de ticking) #
         # MOUVEMENT : les touches
