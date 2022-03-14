@@ -7,16 +7,23 @@ class Clyde(Ghost):
     def __init__(self, game, maze_pos, case_size):
         super().__init__("clyde", maze_pos, case_size, game) 
         self.looking_direction = "up"
+        self.ai_grid_values_to_checkpoint = None
     
-    def tick_ai(self):
-        avalaible_way = self.get_available_pathway()
-        if len(avalaible_way) >= 3 or self.is_blocked():
-            self.looking_direction = random.choice(avalaible_way)
-        
-        
-        if not self.is_moving and self.can_move():
-             self.move(self.looking_direction)
-             self.rotate(self.looking_direction)
+    def tick_ai(self):        
+        if self.mode == "chasing":
+            avalaible_way = self.get_available_pathway()
+            if len(avalaible_way) >= 3 or self.is_blocked():
+                self.looking_direction = random.choice(avalaible_way)      
+            if not self.is_moving and self.can_move():
+                self.move(self.looking_direction)
+                self.rotate(self.looking_direction)
+        elif self.mode == "scattering" :
+            if self.ai_grid_values_to_checkpoint is None:
+                self.ai_grid_values_to_checkpoint =  self.game.maze.create_ai_grid_values_to(self.game.maze.ghosts_checkpoints["clyde_checkpoint"])
+            if not self.is_moving:
+                self.move_with_ai_grid(self.ai_grid_values_to_checkpoint)
+            if self.maze_pos == self.game.maze.ghosts_checkpoints["clyde_checkpoint"]:
+                self.mode = "chasing"
 
     def is_blocked(self):
         return ((self.looking_direction == "left" and self.game.maze.get_map_element((self.maze_pos[0]-1,self.maze_pos[1])) != "0") or

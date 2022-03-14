@@ -76,8 +76,10 @@ class Maze:
     def get_map_element(self, maze_pos):
         return self.map_layout[maze_pos[1]][maze_pos[0]] 
     
-    def get_ai_value(self, maze_pos):
-        return self.ai_grid[maze_pos[1]][maze_pos[0]] 
+    def get_ai_value(self, maze_pos, ai_grid=None):
+        if ai_grid is None:
+            ai_grid = self.ai_grid
+        return ai_grid[maze_pos[1]][maze_pos[0]] 
     
     def load_map(self):
          # Il faut séparer les élément de la map (mur, point de tp, etc..) et les entité (pacgom, point de spawn fantom et pacman)
@@ -168,19 +170,19 @@ class Maze:
             if len(targets) != 0:
                 for p in targets:
                     # left
-                    if self.get_map_element((p[0]-1,p[1])) == "0" and self.get_ai_value((p[0]-1,p[1])) >= 999:
+                    if self.get_map_element((p[0]-1,p[1])) == "0" and self.get_ai_value((p[0]-1,p[1]), ai_grid) >= 999:
                         to_treat[i].append((p[0]-1,p[1]))
                         ai_grid[p[1]][p[0]-1] = i
                     # droite
-                    if self.get_map_element((p[0]+1,p[1])) == "0" and self.get_ai_value((p[0]+1,p[1])) >= 999:
+                    if self.get_map_element((p[0]+1,p[1])) == "0" and self.get_ai_value((p[0]+1,p[1]), ai_grid) >= 999:
                         to_treat[i].append((p[0]+1,p[1]))
                         ai_grid[p[1]][p[0]+1] = i
                     # haut
-                    if self.get_map_element((p[0],p[1]-1)) == "0" and self.get_ai_value((p[0],p[1]-1)) >= 999:
+                    if self.get_map_element((p[0],p[1]-1)) == "0" and self.get_ai_value((p[0],p[1]-1), ai_grid) >= 999:
                         to_treat[i].append((p[0],p[1]-1))
                         ai_grid[p[1]-1][p[0]] = i
                     # bas
-                    if self.get_map_element((p[0],p[1]+1)) == "0" and self.get_ai_value((p[0],p[1]+1)) >= 999:
+                    if self.get_map_element((p[0],p[1]+1)) == "0" and self.get_ai_value((p[0],p[1]+1), ai_grid) >= 999:
                         to_treat[i].append((p[0],p[1]+1))
                         ai_grid[p[1]+1][p[0]] = i
                 to_treat.append([])                    
@@ -188,10 +190,11 @@ class Maze:
         ai_grid[target_maze_pos[1]][target_maze_pos[0]] = 0    
         return ai_grid
     
-    def verify_win(self, self.Pacgom):
+    def verify_win(self, Pacgom):
         self.Pacgom = []
             
         
         pass
+
         
 

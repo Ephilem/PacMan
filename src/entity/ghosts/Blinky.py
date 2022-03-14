@@ -16,6 +16,8 @@ class Blinky(Ghost):
                 self.ai_grid_values_to_checkpoint =  self.game.maze.create_ai_grid_values_to(self.game.maze.ghosts_checkpoints["blinky_checkpoint"])
             if not self.is_moving:
                 self.move_with_ai_grid(self.ai_grid_values_to_checkpoint)
+            if self.maze_pos == self.game.maze.ghosts_checkpoints["blinky_checkpoint"]:
+                self.mode = "chasing"
            
 
             
