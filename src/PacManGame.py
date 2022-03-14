@@ -1,5 +1,6 @@
 from telnetlib import GA
 import pygame, time
+from EndScreen import Endscreen
 from Maze import *
 from Button import *
 from ResourcesProvider import *
@@ -25,6 +26,7 @@ class PacManGame():
         self.clock = pygame.time.Clock()
         
         self.maze = Maze(self, (0,0), 0)
+        self.game_stat = "playing"
 
         # Création de la fenêtre
         self.window_width = self.maze.width_height_px[0]
@@ -46,6 +48,12 @@ class PacManGame():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.on_click(event)
             
+            if self.game_stat == "winning":
+                self.game_stat = "win"
+                Endscreen(self, "win")
+            elif self.game_stat == "losing":
+                self.game_stat = "loose"
+                Endscreen(self, "loose")
             self.render()        
             self.clock.tick(100)    
        

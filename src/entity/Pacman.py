@@ -25,8 +25,22 @@ class Pacman(MovingEntity):
             if len(potential_pacgom) != 0:
                 self.game.maze.pacgoms.remove(potential_pacgom[0])
 
+        # COLLISION AVEC FANTOME
+        for ghost in self.game.maze.ghost_registry.values():
+            # Pour avoir sont rectangle de collision, on prend la première frames
+            ghost_pos = [x*self.case_size for x in ghost.maze_pos]
+            ghost_size = ghost.textures[0].get_size()
+            pacman_pos = [x*self.case_size for x in self.maze_pos]
+            pacman_size = self.textures[0].get_size()
+            if self.game.game_stat == "playing" and (pacman_pos[0] < ghost_pos[0] + ghost_size[0]) and (ghost_pos[0] < pacman_pos[0] + pacman_size[0]) and (pacman_pos[1] < ghost_pos[1] + ghost_size[1]) and (ghost_pos[1] < pacman_pos[1] + pacman_size[1]) :
+                self.game.game_stat = "losing"
+            
+
+
+
         # IA (car render fait aussi office de ticking) #
         # MOUVEMENT : les touches
+
         if pygame.key.get_pressed()[pygame.K_LEFT] and self.game.maze.get_map_element((self.maze_pos[0]-1, self.maze_pos[1])) == "0":
             self.direction_to_go = "left"  
         elif pygame.key.get_pressed()[pygame.K_RIGHT] and self.game.maze.get_map_element((self.maze_pos[0]+1, self.maze_pos[1])) == "0":

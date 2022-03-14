@@ -20,6 +20,10 @@ Entre temps - optimisation, meilleur mouvement de pacman & ia basique de blinky 
 
 10/03/2022 - ia de pinky en cours- système de checkpoint au départ
 
+entre temps - zvzncement sur les ia des fantome et réflexions de le faire autrement
+
+14/03/2022 - Scoreboard et screen de fin et la collision entre Pacman et les fantomes - Détection des scénario de fin (win & lose) et écran de fin
+
 ## Caractère
 
 0 = vide

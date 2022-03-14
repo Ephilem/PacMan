@@ -5,6 +5,7 @@ class Pinky(Ghost):
 
     def __init__(self, game, maze_pos, case_size):
         super().__init__("pinky", maze_pos, case_size, game) 
+        self.ai_grid_values_to_checkpoint = None
     
     def tick_ai(self):
         

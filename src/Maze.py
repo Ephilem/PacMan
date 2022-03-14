@@ -13,14 +13,10 @@ from tile.WallTile import *
 
 
 class Maze:
-    """
-        Créer la grille de morpion de 600x600 pixels à partir d'une position
-    """
 
     def __init__(self, game, pos, level):
         self.game = game
         self.game.render_registry.append(self)
-        self.game.on_click_registry.append(self)
 
         self.CASE_SIZE = 25
         
@@ -37,7 +33,7 @@ class Maze:
         
         self.pacman = None   
 
-        self.entity_registry = {}
+        self.ghost_registry = {}
         self.ghosts_checkpoints = {}
         self.pacgoms = []
         self.super_pacgoms = []
@@ -54,24 +50,23 @@ class Maze:
             lines = contents.split("\n") 
         return [ [y for y in x] for x in lines]
 
-    def on_click(self, event):
-        pass
+    def render(self, surface, forcing=False):   
+        if self.game.game_stat == "playing" or forcing:
+            surface.blit(self.map_to_render, (0,0))
+            self.verify_win()
 
-    def render(self, surface):   
-        surface.blit(self.map_to_render, (0,0))
-        
-        # rendue des pacgoms
-        for pacgom in self.pacgoms+self.super_pacgoms:
-            pacgom.render(surface, (pacgom.maze_pos[0]*self.CASE_SIZE, pacgom.maze_pos[1]*self.CASE_SIZE))
+            # rendue des pacgoms
+            for pacgom in self.pacgoms+self.super_pacgoms:
+                pacgom.render(surface, (pacgom.maze_pos[0]*self.CASE_SIZE, pacgom.maze_pos[1]*self.CASE_SIZE))
 
-        # rendue des entités
-        for entity in self.entity_registry.values():
-            entity.render(surface, (entity.maze_pos[0]*self.CASE_SIZE, entity.maze_pos[1]*self.CASE_SIZE))
+            # rendue des entités
+            for entity in self.ghost_registry.values():
+                entity.render(surface, (entity.maze_pos[0]*self.CASE_SIZE, entity.maze_pos[1]*self.CASE_SIZE))
 
-        # rendue de pacman appart pour être sur qu'il soit au premier plan
-        self.pacman.render(surface, (self.pacman.maze_pos[0]*self.CASE_SIZE, self.pacman.maze_pos[1]*self.CASE_SIZE))
+            # rendue de pacman appart pour être sur qu'il soit au premier plan
+            self.pacman.render(surface, (self.pacman.maze_pos[0]*self.CASE_SIZE, self.pacman.maze_pos[1]*self.CASE_SIZE))
 
-        #surface.blit(self.ai_to_render, (0,0))
+            #surface.blit(self.ai_to_render, (0,0))
     
     def get_map_element(self, maze_pos):
         return self.map_layout[maze_pos[1]][maze_pos[0]] 
@@ -93,13 +88,13 @@ class Maze:
                     elif v == "s":
                         self.pacman = Pacman(self.game, (x, y), self.CASE_SIZE)
                     elif v == "P":
-                        self.entity_registry['pinky'] = Pinky(self.game, (x, y), self.CASE_SIZE)
+                        self.ghost_registry['pinky'] = Pinky(self.game, (x, y), self.CASE_SIZE)
                     elif v == "I":
-                        self.entity_registry['inky'] = Inky(self.game, (x, y), self.CASE_SIZE)
+                        self.ghost_registry['inky'] = Inky(self.game, (x, y), self.CASE_SIZE)
                     elif v == "B":
-                        self.entity_registry['blinky'] = Blinky(self.game, (x, y), self.CASE_SIZE)
+                        self.ghost_registry['blinky'] = Blinky(self.game, (x, y), self.CASE_SIZE)
                     elif v == "C":
-                        self.entity_registry['clyde'] = Clyde(self.game, (x, y), self.CASE_SIZE)
+                        self.ghost_registry['clyde'] = Clyde(self.game, (x, y), self.CASE_SIZE)
                     elif v == "/":
                         self.ghosts_checkpoints['pinky_checkpoint'] =  (x, y)
                     elif v == "+":
@@ -190,11 +185,14 @@ class Maze:
         ai_grid[target_maze_pos[1]][target_maze_pos[0]] = 0    
         return ai_grid
     
-    def verify_win(self, Pacgom):
-        self.Pacgom = []
-            
+    def verify_win(self):
+        if len(self.pacgoms) == 0 and len(self.super_pacgoms) == 0 and self.game.game_stat == "playing":
+            self.game.game_stat = "winning"
         
         pass
+
+    def __del__(self):
+        self.game.render_registry.remove(self)
 
         
 
