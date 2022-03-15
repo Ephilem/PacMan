@@ -1,4 +1,5 @@
 from asyncio import to_thread
+from xml.dom.minidom import parseString
 import pygame
 from entity.Entity import Entity
 from entity.Pacgom import Pacgom
@@ -37,12 +38,25 @@ class Maze:
         self.ghosts_checkpoints = {}
         self.pacgoms = []
         self.super_pacgoms = []
+        # Nous allons faire une surface pour faire le rendue des pacgom qu'on va changer a chaque fois qu'on en enlève pour gagner des FPS (mais on laisse les superpacgom pour l'animation)
+        self.pacgoms_surface = pygame.Surface(self.width_height_px, flags=pygame.SRCALPHA)
         # Il faut séparer les élément de la map (mur, point de tp, etc..) et les entité (pacgom, point de spawn fantom et pacman)
         self.load_map()
+        # on render une première fois les pacgoms
+        self.remove_pacgom()
                             
         self.ai_to_render = pygame.Surface((self.width_height_px[0], self.width_height_px[1]), flags=pygame.SRCALPHA) 
         self.calcul_ai_grid(self.pacman.maze_pos)
 
+    def remove_pacgom(self, pacgom: Pacgom=None):
+        """
+        permet d'enveler une pacgom. si aucune pacgom n'est préciser, faire juste le render
+        """
+        if not pacgom is None:
+            self.game.maze.pacgoms.remove(pacgom)
+        self.pacgoms_surface = pygame.Surface(self.width_height_px, flags=pygame.SRCALPHA)
+        for pacgom in self.pacgoms+self.super_pacgoms:
+                pacgom.render(self.pacgoms_surface, (pacgom.maze_pos[0]*self.CASE_SIZE, pacgom.maze_pos[1]*self.CASE_SIZE))
 
     def read_level_file(self, level):
         with open("levels/"+str(level)+".txt") as f:
@@ -55,9 +69,12 @@ class Maze:
             surface.blit(self.map_to_render, (0,0))
             self.verify_win()
 
-            # rendue des pacgoms
-            for pacgom in self.pacgoms+self.super_pacgoms:
-                pacgom.render(surface, (pacgom.maze_pos[0]*self.CASE_SIZE, pacgom.maze_pos[1]*self.CASE_SIZE))
+            # appliquer la surface des pacgoms sur l'écran
+            surface.blit(self.pacgoms_surface, (0,0))
+
+            # rendue des super_pacgom
+            for super_pacgom in self.super_pacgoms:
+                super_pacgom.render(surface, (super_pacgom.maze_pos[0]*self.CASE_SIZE, super_pacgom.maze_pos[1]*self.CASE_SIZE))
 
             # rendue des entités
             for entity in self.ghost_registry.values():
@@ -188,11 +205,8 @@ class Maze:
     def verify_win(self):
         if len(self.pacgoms) == 0 and len(self.super_pacgoms) == 0 and self.game.game_stat == "playing":
             self.game.game_stat = "winning"
-        
-        pass
 
-    def __del__(self):
-        self.game.render_registry.remove(self)
-
-        
+    def set_ghosts_fear_mode(self):
+        for ghost in self.ghost_registry:
+            ghost.fear()
 

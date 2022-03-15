@@ -85,7 +85,8 @@ class PacManGame():
         self.window.blit(pygame.font.SysFont(None,48).render(str(round(self.clock.get_time())), True, (255,255,255)), (self.maze.width_height_px[0]+10,30))
         pygame.display.flip()
 
-
+    def restart_game(self):
+        self.maze = Maze(self, (0,0), 0)
 
 
 

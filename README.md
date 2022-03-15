@@ -24,7 +24,9 @@ entre temps - zvzncement sur les ia des fantome et réflexions de le faire autre
 
 14/03/2022 - Scoreboard et screen de fin et la collision entre Pacman et les fantomes - Détection des scénario de fin (win & lose) et écran de fin
 
-## Caractère
+15/03/2022 - Possibilité de manger les super pacgom et le mode fear - Optimisation de façon de rendue des pacgom, début du mode fear et super pacgom mangeable.
+
+## Map Making
 
 0 = vide
 

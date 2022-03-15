@@ -1,4 +1,4 @@
-import pygame
+import pygame, random
 from abc import abstractmethod
 from ResourcesProvider import ResourcesProvider
 from entity.MovingEntity import MovingEntity
@@ -15,19 +15,40 @@ class Ghost(MovingEntity):
         elif ghost_type == "pinky":
             images = [pygame.transform.scale(frame, (case_size, case_size)) for frame in ResourcesProvider.get.pinky_img_frames]
         super().__init__(images, maze_pos, 15, case_size, game, ticks_between_frame=30)
-        self.mode = "scattering" # les modes : scattering, chasing, running_away, eated        
+        self.mode = "scattering" # les modes : scattering, chasing, fear, eated        
         self.set_frame_min_max(min=0,max=2)
-        print(self.get_frame_min_max)
+        self.fear_tick = 0
+
+        # Cette valeur est utiliser seulement par clyde et quand les fantome sont en mode "peur"
+        self.looking_direction = "up"
 
     @abstractmethod
     def tick_ai(self):
         pass
 
+    def fear_ai(self):
+        # Réduir le tick_ai
+        self.tick_ai -= 1
+        if self.tick_ai == 0:
+
+        
+        # AI mouvement (les mouvement sont aléatoire)        
+        avalaible_way = self.get_available_pathway()
+        if len(avalaible_way) >= 3 or self.is_blocked():
+            self.looking_direction = random.choice(avalaible_way)      
+        if not self.is_moving and self.can_move():
+            self.move(self.looking_direction)
+            self.rotate(self.looking_direction)
+        
+
     def render(self, surface, pos_to_render):
         surface.blit(self.frame, self.get_pos_to_render(pos_to_render))
         self.tick_animation()
         self.tick_movement_system(self)
-        self.tick_ai()
+        if self.fear_tick != 0:
+            self.fear_ai()
+        else:
+            self.tick_ai()
     
     def rotate(self, direction):
         if direction == "left":
@@ -59,19 +80,47 @@ class Ghost(MovingEntity):
     def get_ai_value(self, ai_grid, maze_pos):
         return ai_grid[maze_pos[1]][maze_pos[0]]
     
+    def fear(self):
+        """
+        mettre les fantome en mode 'fear'
+        """
+        if self.mode == "scattering" or self.mode == "chasing":
+            self.mode = "fear"
+            self.fear_tick = 200
+
 
     
 
+    # Fontion de mouvement aléatoire pour le mode fear (car quand le fantome à peur, et bas il se déplace aléatoirement)
+    def is_blocked(self):
+        return ((self.looking_direction == "left" and self.game.maze.get_map_element((self.maze_pos[0]-1,self.maze_pos[1])) != "0") or
+                (self.looking_direction == "right" and self.game.maze.get_map_element((self.maze_pos[0]+1,self.maze_pos[1])) != "0") or
+                (self.looking_direction == "up" and self.game.maze.get_map_element((self.maze_pos[0],self.maze_pos[1]-1)) != "0") or
+                (self.looking_direction == "down" and self.game.maze.get_map_element((self.maze_pos[0],self.maze_pos[1]+1)) != "0"))
+
+    def can_move(self):
+        return ((self.looking_direction == "left" and self.game.maze.get_map_element((self.maze_pos[0]-1,self.maze_pos[1])) == "0") or
+                (self.looking_direction == "right" and self.game.maze.get_map_element((self.maze_pos[0]+1,self.maze_pos[1])) == "0") or
+                (self.looking_direction == "up" and self.game.maze.get_map_element((self.maze_pos[0],self.maze_pos[1]-1)) == "0") or
+                (self.looking_direction == "down" and self.game.maze.get_map_element((self.maze_pos[0],self.maze_pos[1]+1)) == "0"))
     
+    def get_available_pathway(self):
+        final = ['up','down','left','right']
+        final.remove(self.get_opposite_direction(self.looking_direction))
+        for direction in final:
+            if direction == "left" and self.game.maze.get_map_element((self.maze_pos[0]-1,self.maze_pos[1])) != "0":
+                final.remove(direction)
+            if direction == "right" and self.game.maze.get_map_element((self.maze_pos[0]+1,self.maze_pos[1])) != "0":
+                final.remove(direction)
+            if direction == "up" and self.game.maze.get_map_element((self.maze_pos[0],self.maze_pos[1]-1)) != "0":
+                final.remove(direction)
+            if direction == "down" and self.game.maze.get_map_element((self.maze_pos[0],self.maze_pos[1]+1)) != "0":
+                final.remove(direction)
+        return final
+    
+    
+    def get_opposite_direction(self, direction):
+        a = {'left': 'right', 'right': 'left', 'up': 'down', 'down': 'up'}
+        return a[direction]
 
-# a ok dsl, je pensait que t juste venue faire un call, j'avais pas vue ^^'
-# tu veut quoi?
-
-
-# hein? tkinter?
-# c pas pour des jeu sa 
-# wait vous utiliser tkinter??????????????????????????????
-#nan tkt
-#tes fantomes ils fonctionnes en vanilla genre avec juste python ou il faut pygame
-# il faut déjà faire une grille d'ia, comme est expliquer sur la feuille (numéroter les case par rapport à la distance de pacman)
-# ah oe flemme
+    
