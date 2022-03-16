@@ -7,7 +7,7 @@ class MovingEntity(Entity):
     def __init__(self, textures, maze_pos, sleep_tick, case_size, game, ticks_between_frame=0):
         super().__init__(textures, maze_pos, ticks_between_frame)
         self.sleep_tick = sleep_tick
-        self.DEFAULT_SLEEP_TICK = sleep_tick
+        self.max_sleep_tick = sleep_tick
         self.case_size = case_size
         self.game = game
 
@@ -32,7 +32,7 @@ class MovingEntity(Entity):
         if self.is_moving:
             self.sleep_tick -= 1
             if self.sleep_tick <= 0:
-                self.sleep_tick = self.DEFAULT_SLEEP_TICK
+                self.sleep_tick = self.max_sleep_tick
                 self.is_moving = False
                 self.change_maze_pos(self.moving_to, entity_ticked)
                 self.moving_to = None
@@ -42,16 +42,20 @@ class MovingEntity(Entity):
         if self.is_moving:
             new_pos = [i*self.case_size for i in self.moving_to]
             if self.moving_direction == "left":
-                return (new_pos[0]+(old_pos[0]-new_pos[0])*(self.sleep_tick/self.DEFAULT_SLEEP_TICK), old_pos[1])
+                return (new_pos[0]+(old_pos[0]-new_pos[0])*(self.sleep_tick/self.max_sleep_tick), old_pos[1])
             if self.moving_direction == "right":
-                return (new_pos[0]+(old_pos[0]-new_pos[0])*(self.sleep_tick/self.DEFAULT_SLEEP_TICK), old_pos[1])
+                return (new_pos[0]+(old_pos[0]-new_pos[0])*(self.sleep_tick/self.max_sleep_tick), old_pos[1])
             if self.moving_direction == "up":
-                return (old_pos[0], new_pos[1]+(old_pos[1]-new_pos[1])*(self.sleep_tick/self.DEFAULT_SLEEP_TICK))
+                return (old_pos[0], new_pos[1]+(old_pos[1]-new_pos[1])*(self.sleep_tick/self.max_sleep_tick))
             if self.moving_direction == "down":
-                return (old_pos[0], new_pos[1]+(old_pos[1]-new_pos[1])*(self.sleep_tick/self.DEFAULT_SLEEP_TICK))
+                return (old_pos[0], new_pos[1]+(old_pos[1]-new_pos[1])*(self.sleep_tick/self.max_sleep_tick))
         else:
             return old_pos
         
-    
     def change_maze_pos(self, new_maze_pos, entity_to_move):
         self.maze_pos = new_maze_pos
+
+    def change_max_sleep_tick(self, new_sleep_tick):
+        self.max_sleep_tick = new_sleep_tick
+        if self.max_sleep_tick < self.sleep_tick:
+            self.sleep_tick = self.max_sleep_tick

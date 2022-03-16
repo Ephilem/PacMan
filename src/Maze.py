@@ -207,6 +207,6 @@ class Maze:
             self.game.game_stat = "winning"
 
     def set_ghosts_fear_mode(self):
-        for ghost in self.ghost_registry:
+        for ghost in self.ghost_registry.values():
             ghost.fear()
 

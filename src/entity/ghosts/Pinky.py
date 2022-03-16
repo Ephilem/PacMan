@@ -1,10 +1,12 @@
+from ResourcesProvider import ResourcesProvider
 from entity.Ghost import Ghost
+import pygame
 
 
 class Pinky(Ghost):
 
     def __init__(self, game, maze_pos, case_size):
-        super().__init__("pinky", maze_pos, case_size, game) 
+        super().__init__([pygame.transform.scale(frame, (case_size, case_size)) for frame in ResourcesProvider.get.pinky_img_frames], maze_pos, case_size, game) 
         self.ai_grid_values_to_checkpoint = None
     
     def tick_ai(self):

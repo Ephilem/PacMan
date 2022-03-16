@@ -19,6 +19,7 @@ class ResourcesProvider:
         self.clyde_img_frames = ResourcesProvider.img_to_animation_frames(pygame.image.load(ResourcesProvider.__get_asset_path("clyde.png")), 15)
         self.inky_img_frames = ResourcesProvider.img_to_animation_frames(pygame.image.load(ResourcesProvider.__get_asset_path("inky.png")), 15)
         self.pinky_img_frames = ResourcesProvider.img_to_animation_frames(pygame.image.load(ResourcesProvider.__get_asset_path("pinky.png")), 15)
+        self.fear_img_frames = ResourcesProvider.img_to_animation_frames(pygame.image.load(ResourcesProvider.__get_asset_path("fear.png")), 15)
         # self.less_go_sound = pygame.mixer.Sound('assets/less_go.mp3')
 
 
