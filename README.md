@@ -26,7 +26,7 @@ entre temps - zvzncement sur les ia des fantome et réflexions de le faire autre
 
 15/03/2022 - Possibilité de manger les super pacgom et le mode fear - Optimisation de façon de rendue des pacgom, début du mode fear et super pacgom mangeable.
 
-entre temps - avancement des ia quand on mange une super pacgom et correction de l'affichage de l'écran de fin
+entre temps - avancement des ia quand on mange une super pacgom et correction de l'affichage de l'écran de fin. Début d'un nouveau système d'ia plus fidèle au jeu
 
 ## Map Making
 

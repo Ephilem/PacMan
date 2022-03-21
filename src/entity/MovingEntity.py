@@ -14,8 +14,14 @@ class MovingEntity(Entity):
         self.is_moving = False
         self.moving_to = None
         self.moving_direction = None
+
+        # sert pour l'ia des phatomes
+        self.last_pos = None
     
     def move(self, direction):
+        """
+        permet de commencer un mouvement vers une case
+        """
         if not self.is_moving and not direction is None:
             if direction == "left":
                 self.moving_to = (self.maze_pos[0]-1,self.maze_pos[1])
@@ -29,16 +35,24 @@ class MovingEntity(Entity):
             self.moving_direction = direction
     
     def tick_movement_system(self, entity_ticked):
+        """
+        permet l'animation du mouvement. IL fait donc office aussi de vitesse de déplacement
+        """
         if self.is_moving:
             self.sleep_tick -= 1
             if self.sleep_tick <= 0:
                 self.sleep_tick = self.max_sleep_tick
                 self.is_moving = False
+                # On utilise maze_pos car il n'a pas officielement bouger, il est toujours dans l'ancienne case, mais pas visuellement
+                self.last_pos = self.maze_pos
                 self.change_maze_pos(self.moving_to, entity_ticked)
                 self.moving_to = None
 
 
     def get_pos_to_render(self, old_pos):
+        """
+        permet d'obtenir la position à faire en rendue en prenant en compte l'animation de mouvement
+        """
         if self.is_moving:
             new_pos = [i*self.case_size for i in self.moving_to]
             if self.moving_direction == "left":

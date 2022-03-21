@@ -1,4 +1,4 @@
-import pygame, random
+import pygame, random, math
 from abc import abstractmethod
 from ResourcesProvider import ResourcesProvider
 from entity.MovingEntity import MovingEntity
@@ -13,9 +13,6 @@ class Ghost(MovingEntity):
         self.set_frame_min_max(min=0,max=2)
         self.fear_tick = 0
 
-        # Cette valeur est utiliser seulement par clyde et quand les fantome sont en mode "peur"
-        self.looking_direction = "up"
-
     @abstractmethod
     def tick_ai(self):
         pass
@@ -27,16 +24,16 @@ class Ghost(MovingEntity):
             self.mode = "chasing"
             self.change_max_sleep_tick(15)
             self.change_texture(self.GHOST_TEXTURE, True)
-            self.rotate(self.looking_direction)
+            self.rotate(self.moving_direction)
 
         
         # AI mouvement (les mouvement sont aléatoire)        
         avalaible_way = self.get_available_pathway()
         if len(avalaible_way) >= 3 or self.is_blocked():
-            self.looking_direction = random.choice(avalaible_way)      
+            self.moving_direction = random.choice(avalaible_way)      
         if not self.is_moving and self.can_move():
-            self.move(self.looking_direction)
-            self.rotate(self.looking_direction)
+            self.move(self.moving_direction)
+            self.rotate(self.moving_direction)
         
 
     def render(self, surface, pos_to_render):
@@ -47,6 +44,11 @@ class Ghost(MovingEntity):
             self.fear_ai()
         else:
             self.tick_ai()
+        
+        if not self.last_pos is None:
+            pygame.draw.rect(self.game.window, (0,255,255), pygame.Rect(self.last_pos[0]*self.case_size, self.last_pos[1]*self.case_size, self.case_size-10, self.case_size-10))
+        for a in self.get_available_pathway():
+            pygame.draw.rect(self.game.window, (255,255,0), pygame.Rect(self.shift_maze_pos_with_direction(self.maze_pos, a)[0]*self.case_size,self.shift_maze_pos_with_direction(self.maze_pos, a)[1]*self.case_size, self.case_size, self.case_size))
     
     def rotate(self, direction):
         if not self.mode == "fear":
@@ -92,33 +94,53 @@ class Ghost(MovingEntity):
 
     
 
-    # Fontion de mouvement aléatoire pour le mode fear (car quand le fantome à peur, et bas il se déplace aléatoirement)
+    # Fonction permettant les déplacement et de l'ia
     def is_blocked(self):
-        return ((self.looking_direction == "left" and self.game.maze.get_map_element((self.maze_pos[0]-1,self.maze_pos[1])) != "0") or
-                (self.looking_direction == "right" and self.game.maze.get_map_element((self.maze_pos[0]+1,self.maze_pos[1])) != "0") or
-                (self.looking_direction == "up" and self.game.maze.get_map_element((self.maze_pos[0],self.maze_pos[1]-1)) != "0") or
-                (self.looking_direction == "down" and self.game.maze.get_map_element((self.maze_pos[0],self.maze_pos[1]+1)) != "0"))
+        return ((self.moving_direction == "left" and self.game.maze.get_map_element((self.maze_pos[0]-1,self.maze_pos[1])) != "0") or
+                (self.moving_direction == "right" and self.game.maze.get_map_element((self.maze_pos[0]+1,self.maze_pos[1])) != "0") or
+                (self.moving_direction == "up" and self.game.maze.get_map_element((self.maze_pos[0],self.maze_pos[1]-1)) != "0") or
+                (self.moving_direction == "down" and self.game.maze.get_map_element((self.maze_pos[0],self.maze_pos[1]+1)) != "0"))
 
     def can_move(self):
-        return ((self.looking_direction == "left" and self.game.maze.get_map_element((self.maze_pos[0]-1,self.maze_pos[1])) == "0") or
-                (self.looking_direction == "right" and self.game.maze.get_map_element((self.maze_pos[0]+1,self.maze_pos[1])) == "0") or
-                (self.looking_direction == "up" and self.game.maze.get_map_element((self.maze_pos[0],self.maze_pos[1]-1)) == "0") or
-                (self.looking_direction == "down" and self.game.maze.get_map_element((self.maze_pos[0],self.maze_pos[1]+1)) == "0"))
+        return ((self.moving_direction == "left" and self.game.maze.get_map_element((self.maze_pos[0]-1,self.maze_pos[1])) == "0") or
+                (self.moving_direction == "right" and self.game.maze.get_map_element((self.maze_pos[0]+1,self.maze_pos[1])) == "0") or
+                (self.moving_direction == "up" and self.game.maze.get_map_element((self.maze_pos[0],self.maze_pos[1]-1)) == "0") or
+                (self.moving_direction == "down" and self.game.maze.get_map_element((self.maze_pos[0],self.maze_pos[1]+1)) == "0"))
     
     def get_available_pathway(self):
+        """
+        retourne les chemin possible qui sont tous sauf d'où il vient et bloquer par quelque chose (comme un mur)
+        """
         final = ['up','down','left','right']
-        final.remove(self.get_opposite_direction(self.looking_direction))
-        for direction in final:
-            if direction == "left" and self.game.maze.get_map_element((self.maze_pos[0]-1,self.maze_pos[1])) != "0":
-                final.remove(direction)
-            if direction == "right" and self.game.maze.get_map_element((self.maze_pos[0]+1,self.maze_pos[1])) != "0":
-                final.remove(direction)
-            if direction == "up" and self.game.maze.get_map_element((self.maze_pos[0],self.maze_pos[1]-1)) != "0":
-                final.remove(direction)
-            if direction == "down" and self.game.maze.get_map_element((self.maze_pos[0],self.maze_pos[1]+1)) != "0":
+        # final.remove(self.get_opposite_direction(self.moving_direction))
+        # on fait une copie de final
+        for direction in [x for x in final]:
+            print(self.last_pos, self.shift_maze_pos_with_direction(self.maze_pos, direction), direction, self.last_pos != self.shift_maze_pos_with_direction(self.maze_pos, direction))
+            if self.last_pos != self.shift_maze_pos_with_direction(self.maze_pos, direction):
+                if direction == "left" and self.game.maze.get_map_element((self.maze_pos[0]-1,self.maze_pos[1])) != "0":
+                    final.remove(direction)
+                if direction == "right" and self.game.maze.get_map_element((self.maze_pos[0]+1,self.maze_pos[1])) != "0":
+                    final.remove(direction)
+                if direction == "up" and self.game.maze.get_map_element((self.maze_pos[0],self.maze_pos[1]-1)) != "0":
+                    final.remove(direction)
+                if direction == "down" and self.game.maze.get_map_element((self.maze_pos[0],self.maze_pos[1]+1)) != "0":
+                    final.remove(direction)
+            else:
                 final.remove(direction)
         return final
     
+    def shift_maze_pos_with_direction(self, maze_pos, direction, shift=1):
+        if direction == "left":
+            return maze_pos[0]-shift,maze_pos[1]
+        if direction == "right":
+            return maze_pos[0]+shift,maze_pos[1]
+        if direction == "up":
+            return maze_pos[0],maze_pos[1]-shift
+        if direction == "down":
+            return maze_pos[0],maze_pos[1]+shift
+    
+    def get_distance_between_two_point(self, mp1, mp2):
+        return math.sqrt((mp2[0]-mp1[0])**2+(mp2[1]-mp1[1])**2)
     
     def get_opposite_direction(self, direction):
         a = {'left': 'right', 'right': 'left', 'up': 'down', 'down': 'up'}

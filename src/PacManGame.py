@@ -55,7 +55,7 @@ class PacManGame():
                 self.game_stat = "loose"
                 Endscreen(self, "loose")
             self.render()        
-            self.clock.tick(100)    
+            self.clock.tick(50)    
        
         pygame.quit()
 
