@@ -7,17 +7,14 @@ class Blinky(Ghost):
 
     def __init__(self, game, maze_pos, case_size):
         super().__init__([pygame.transform.scale(frame, (case_size, case_size)) for frame in ResourcesProvider.get.blinky_img_frames], maze_pos, case_size, game) 
-        self.ai_grid_values_to_checkpoint = None
-    
+            
     def tick_ai(self):
         if self.mode == "chasing":
             if not self.is_moving:
-                self.move_with_ai_grid(self.game.maze.ai_grid)
+                self.move_ai(self.game.maze.pacman.maze_pos)
         elif self.mode == "scattering" :
-            if self.ai_grid_values_to_checkpoint is None:
-                self.ai_grid_values_to_checkpoint =  self.game.maze.create_ai_grid_values_to(self.game.maze.ghosts_checkpoints["blinky_checkpoint"])
             if not self.is_moving:
-                self.move_with_ai_grid(self.ai_grid_values_to_checkpoint)
+                self.move_ai(self.game.maze.ghosts_checkpoints["blinky_checkpoint"])
             if self.maze_pos == self.game.maze.ghosts_checkpoints["blinky_checkpoint"]:
                 self.mode = "chasing"
            

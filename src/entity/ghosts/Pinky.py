@@ -7,21 +7,16 @@ class Pinky(Ghost):
 
     def __init__(self, game, maze_pos, case_size):
         super().__init__([pygame.transform.scale(frame, (case_size, case_size)) for frame in ResourcesProvider.get.pinky_img_frames], maze_pos, case_size, game) 
-        self.ai_grid_values_to_checkpoint = None
     
-    def tick_ai(self):
-        
+    def tick_ai(self):        
         if self.mode == "chasing":
-
+            p = self.shift_maze_pos_with_direction(self.game.maze.pacman.maze_pos, self.game.maze.pacman.moving_direction, 4)
             if not self.is_moving:
-                self.move_with_ai_grid(self.game.maze.ai_grid)
-
-
-        elif self.mode == "scattering" :
-            if self.ai_grid_values_to_checkpoint is None:
-                self.ai_grid_values_to_checkpoint =  self.game.maze.create_ai_grid_values_to(self.game.maze.ghosts_checkpoints["pinky_checkpoint"])
+                self.move_ai(self.shift_maze_pos_with_direction(self.game.maze.pacman.maze_pos, self.game.maze.pacman.moving_direction, 4))
+            pygame.draw.rect(self.game.window, (255,0,255), pygame.Rect(p[0]*self.case_size, p[1]*self.case_size, 12, 12))
+        elif self.mode == "scattering":
             if not self.is_moving:
-                self.move_with_ai_grid(self.ai_grid_values_to_checkpoint)
+                self.move_ai(self.game.maze.ghosts_checkpoints["pinky_checkpoint"])
             if self.maze_pos == self.game.maze.ghosts_checkpoints["pinky_checkpoint"]:
                 self.mode = "chasing"
     

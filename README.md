@@ -28,6 +28,8 @@ entre temps - zvzncement sur les ia des fantome et réflexions de le faire autre
 
 entre temps - avancement des ia quand on mange une super pacgom et correction de l'affichage de l'écran de fin. Début d'un nouveau système d'ia plus fidèle au jeu
 
+21/03/2022 - scoreboard & finir refonte ia - début de scoreboard et refonte ia fini. manque qql mécanique
+
 ## Map Making
 
 0 = vide

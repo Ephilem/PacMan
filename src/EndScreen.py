@@ -29,7 +29,6 @@ class Endscreen():
         self.game.render_registry.remove(self)
         self.game.on_click_registry.remove(self)
         self.game.restart_game()
-        self.game.game_stat = "playing"
 
     def render(self, surface):
         surface.blit(self.screenshot, (0,0))

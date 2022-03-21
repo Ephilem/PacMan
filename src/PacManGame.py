@@ -4,6 +4,7 @@ from EndScreen import Endscreen
 from Maze import *
 from Button import *
 from ResourcesProvider import *
+from Scoreboard import Scoreboard
 
 
 class PacManGame():
@@ -27,6 +28,8 @@ class PacManGame():
         
         self.maze = Maze(self, (0,0), 0)
         self.game_stat = "playing"
+
+        self.scoreboard = Scoreboard(self, (self.maze.width_height_px[0],50))
 
         # Création de la fenêtre
         self.window_width = self.maze.width_height_px[0]
@@ -55,7 +58,7 @@ class PacManGame():
                 self.game_stat = "loose"
                 Endscreen(self, "loose")
             self.render()        
-            self.clock.tick(50)    
+            self.clock.tick(100)    
        
         pygame.quit()
 
@@ -87,6 +90,8 @@ class PacManGame():
 
     def restart_game(self):
         self.maze = Maze(self, (0,0), 0)
+        self.game_stat = "playing"
+        self.scoreboard.reset()
 
 
 
