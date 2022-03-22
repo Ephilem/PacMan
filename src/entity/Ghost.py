@@ -20,16 +20,14 @@ class Ghost(MovingEntity):
     def fear_ai(self):
         # Réduir le fear ai
         self.fear_tick -= 1
-        if self.fear_tick == 0:
+        if self.fear_tick == 0 and self.mode == "fear":
             self.mode = "chasing"
             self.change_max_sleep_tick(15)
             self.change_texture(self.GHOST_TEXTURE, True)
             self.rotate(self.moving_direction)
-
         
         # AI mouvement (les mouvement sont aléatoire)        
         self.move_ai_rand()
-        
 
     def render(self, surface, pos_to_render):
         surface.blit(self.frame, self.get_pos_to_render(pos_to_render))
@@ -50,29 +48,10 @@ class Ghost(MovingEntity):
                 self.set_frame_min_max(min=4,max=5)
             if direction == "down":
                 self.set_frame_min_max(min=2,max=3)
-
-    # def move_with_ai_grid(self, ai_grid):
-    #     ai_value = self.get_ai_value(ai_grid, self.maze_pos)
-    #     to_go = ai_value-1
-    #     if self.get_ai_value(ai_grid, (self.maze_pos[0]-1,self.maze_pos[1])) == to_go:
-    #         self.move("left")
-    #         self.rotate("left")
-    #     if self.get_ai_value(ai_grid, (self.maze_pos[0]+1,self.maze_pos[1])) == to_go:
-    #         self.move("right")
-    #         self.rotate("right")
-    #     if self.get_ai_value(ai_grid, (self.maze_pos[0],self.maze_pos[1]-1)) == to_go:
-    #         self.move("up")
-    #         self.rotate("up")
-    #     if self.get_ai_value(ai_grid, (self.maze_pos[0],self.maze_pos[1]+1)) == to_go:
-    #         self.move("down")
-    #         self.rotate("down")
-            
-    # def get_ai_value(self, ai_grid, maze_pos):
-    #     return ai_grid[maze_pos[1]][maze_pos[0]]
         
     def fear(self):
         """
-        mettre les fantome en mode 'fear'
+        mettre le fantome en mode 'fear'
         """
         if self.mode == "scattering" or self.mode == "chasing":
             self.mode = "fear"
@@ -83,8 +62,16 @@ class Ghost(MovingEntity):
             self.moving_direction = self.get_opposite_direction(self.moving_direction)
             self.moving_to = self.maze_pos
     
+    def eated(self):
+        """
+        mettre le fantome en mode 'eated'
+        """
+        if self.mode == "fear":
+            self.mode = "eated"
+            self.fear_tick = 0
+    
     #### Bon fonctionnement permettant les ia de fonctionner ###
-    def move_ai(self, target_maze_pos):
+    def move_ai(self, target_maze_pos, rotate=True):
         """
         permet de bouger vers un point
         """
@@ -99,16 +86,18 @@ class Ghost(MovingEntity):
                 best_direction_and_distance = (direction, distance)
 
         self.move(best_direction_and_distance[0])
-        self.rotate(best_direction_and_distance[0])
+        if rotate:
+            self.rotate(best_direction_and_distance[0])
     
-    def move_ai_rand(self):
+    def move_ai_rand(self, rotate=True):
         """
         permet de bouger de façon aléatoire. utiliser par clyde et les phantome en mode 'fear'
         """
         avalaible_way = self.get_available_pathway()
         self.moving_direction = random.choice(avalaible_way) 
         self.move(self.moving_direction)
-        self.rotate(self.moving_direction)
+        if rotate:
+            self.rotate(self.moving_direction)
 
 
     def is_blocked(self):

@@ -51,9 +51,8 @@ B = blinky<br/>
 C = clyde<br/>
 
 / = pinky checkpoint<br/>
+\- = inky checkpoint<br/> \* = blinky checkpoint<br/>
+\- = clyde checkpoint<br/>
 
-- = inky checkpoint<br/>
-
-* = blinky checkpoint<br/>
-
-- = clyde checkpoint<br/>
+g = ghost house door left
+h = ghost house door right
