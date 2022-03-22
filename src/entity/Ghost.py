@@ -5,13 +5,19 @@ from entity.MovingEntity import MovingEntity
 
 class Ghost(MovingEntity):
 
-    def __init__(self, texture, maze_pos, case_size, game):
+    def __init__(self, texture, maze_pos, case_size, game, not_spawning_in_the_ghost_house=False):
         self.GHOST_TEXTURE = texture
         self.FEAR_GHOST_TEXTURE = [pygame.transform.scale(frame, (case_size, case_size)) for frame in ResourcesProvider.get.fear_img_frames]
         super().__init__(self.GHOST_TEXTURE, maze_pos, 15, case_size, game, ticks_between_frame=30)
-        self.mode = "scattering" # les modes : scattering, chasing, fear, eated        
+        self.mode = "scattering" # les modes : scattering, chasing, fear, eated  
+        if not_spawning_in_the_ghost_house:
+            self.mode = "scattering"      
         self.set_frame_min_max(min=0,max=2)
         self.fear_tick = 0
+        self.scattering_tick = 0
+
+        ## Pour faire sortir de la ghost house
+        self.getting_out_of_the_ghost_house_ticking = 0
 
     @abstractmethod
     def tick_ai(self):
@@ -26,7 +32,7 @@ class Ghost(MovingEntity):
             self.change_texture(self.GHOST_TEXTURE, True)
             self.rotate(self.moving_direction)
         
-        # AI mouvement (les mouvement sont aléatoire)        
+        # AI mouvement (les mouvements sont aléatoire)        
         self.move_ai_rand()
 
     def render(self, surface, pos_to_render):
@@ -70,7 +76,7 @@ class Ghost(MovingEntity):
             self.mode = "eated"
             self.fear_tick = 0
     
-    #### Bon fonctionnement permettant les ia de fonctionner ###
+    #### Bon fonctionnement permettant les ia de fonctionner ####
     def move_ai(self, target_maze_pos, rotate=True):
         """
         permet de bouger vers un point
@@ -98,19 +104,6 @@ class Ghost(MovingEntity):
         self.move(self.moving_direction)
         if rotate:
             self.rotate(self.moving_direction)
-
-
-    def is_blocked(self):
-        return ((self.moving_direction == "left" and self.game.maze.get_map_element((self.maze_pos[0]-1,self.maze_pos[1])) != "0") or
-                (self.moving_direction == "right" and self.game.maze.get_map_element((self.maze_pos[0]+1,self.maze_pos[1])) != "0") or
-                (self.moving_direction == "up" and self.game.maze.get_map_element((self.maze_pos[0],self.maze_pos[1]-1)) != "0") or
-                (self.moving_direction == "down" and self.game.maze.get_map_element((self.maze_pos[0],self.maze_pos[1]+1)) != "0"))
-
-    def can_move(self):
-        return ((self.moving_direction == "left" and self.game.maze.get_map_element((self.maze_pos[0]-1,self.maze_pos[1])) == "0") or
-                (self.moving_direction == "right" and self.game.maze.get_map_element((self.maze_pos[0]+1,self.maze_pos[1])) == "0") or
-                (self.moving_direction == "up" and self.game.maze.get_map_element((self.maze_pos[0],self.maze_pos[1]-1)) == "0") or
-                (self.moving_direction == "down" and self.game.maze.get_map_element((self.maze_pos[0],self.maze_pos[1]+1)) == "0"))
     
     def get_available_pathway(self):
         """

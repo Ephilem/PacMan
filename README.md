@@ -30,6 +30,8 @@ entre temps - avancement des ia quand on mange une super pacgom et correction de
 
 21/03/2022 - scoreboard & finir refonte ia - début de scoreboard et refonte ia fini. manque qql mécanique
 
+22/03/2022 - avancer scoreboard & début système d'event et ghost house - début du leadboard (qui est dans le scoreboard) et début du système de sortir de la ghost house et d'event
+
 ## Map Making
 
 0 = vide

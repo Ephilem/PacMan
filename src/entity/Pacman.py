@@ -17,7 +17,7 @@ class Pacman(MovingEntity):
         
         self.tick_movement_system(self)
         if self.is_moving and self.sleep_tick <= 1:
-            self.game.maze.calcul_ai_grid(self.moving_to) 
+            #self.game.maze.calcul_ai_grid(self.moving_to) 
             # Vérif si il y a une pacgom où pacman se déplace
             potential_pacgom = [x for x in self.game.maze.pacgoms if x.maze_pos == self.moving_to]
             if len(potential_pacgom) != 0:

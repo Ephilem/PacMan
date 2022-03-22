@@ -2,6 +2,7 @@ from asyncio import to_thread
 from xml.dom.minidom import parseString
 import pygame
 from entity.Entity import Entity
+from entity.GhostHouseDoor import GhostHouseDoor
 from entity.Pacgom import Pacgom
 from entity.Pacman import Pacman
 from entity.SuperPacgom import SuperPacgom
@@ -20,6 +21,20 @@ class Maze:
         self.game.render_registry.append(self)
 
         self.CASE_SIZE = 25
+
+        # permet de savoir combien de temps dure la game et de actionner des évènement comme un fantome sort de la maison
+        self.tick = 0
+
+        # les options de la partie
+        self.maze_options = {
+            'pinky_get_out_at': 500,
+            'clyde_get_out_at': 1000,
+            'inky_get_out_at': 1500,
+            'blinky_scattering_time': 100,
+            'clyde_scattering_time': 100,
+            'inky_scattering_time': 100,
+            'pinky_scattering_time': 100,
+        }
         
         WallTile(self.CASE_SIZE)
         
@@ -33,6 +48,7 @@ class Maze:
         self.map_layout = [[None]*len(self.level_data[0]) for x in range(len(self.level_data))]     
         
         self.pacman = None   
+        self.ghost_house_door = None
 
         self.ghost_registry = {}
         self.ghosts_checkpoints = {}
@@ -46,7 +62,6 @@ class Maze:
         self.remove_pacgom()
                             
         self.ai_to_render = pygame.Surface((self.width_height_px[0], self.width_height_px[1]), flags=pygame.SRCALPHA) 
-        self.calcul_ai_grid(self.pacman.maze_pos)
 
     def remove_pacgom(self, pacgom: Pacgom=None):
         """
@@ -66,6 +81,8 @@ class Maze:
 
     def render(self, surface, forcing=False):   
         if self.game.game_stat == "playing" or forcing:
+            self.tick_event_sys()
+
             surface.blit(self.map_to_render, (0,0))
             self.verify_win()
 
@@ -76,14 +93,18 @@ class Maze:
             for super_pacgom in self.super_pacgoms:
                 super_pacgom.render(surface, (super_pacgom.maze_pos[0]*self.CASE_SIZE, super_pacgom.maze_pos[1]*self.CASE_SIZE))
 
+            # rendue de la porte
+            self.ghost_house_door.render(surface)
+
             # rendue des entités
             for entity in self.ghost_registry.values():
                 entity.render(surface, (entity.maze_pos[0]*self.CASE_SIZE, entity.maze_pos[1]*self.CASE_SIZE))
 
             # rendue de pacman appart pour être sur qu'il soit au premier plan
             self.pacman.render(surface, (self.pacman.maze_pos[0]*self.CASE_SIZE, self.pacman.maze_pos[1]*self.CASE_SIZE))
-
-            #surface.blit(self.ai_to_render, (0,0))
+    
+    def tick_event_sys(self):
+        self.tick += 1
     
     def get_map_element(self, maze_pos):
         return self.map_layout[maze_pos[1]][maze_pos[0]] 
@@ -94,10 +115,14 @@ class Maze:
         return ai_grid[maze_pos[1]][maze_pos[0]] 
     
     def load_map(self):
-         # Il faut séparer les élément de la map (mur, point de tp, etc..) et les entité (pacgom, point de spawn fantom et pacman)
+        # Il faut séparer les élément de la map (mur, point de tp, etc..) et les entité (pacgom, point de spawn fantom et pacman)
+        # On va stocker les position pour la ghost house door
+        ghd_maze_pos_1 = (0,0)
+        ghd_maze_pos_2 = (0,0)
         for y, lines in enumerate(self.level_data):
             for x, v in enumerate(lines): 
-                if v in ["o","O","s","I","P","C","B","/","+","-","*"]:
+                if v in ["o","O","s","I","P","C","B","/","+","-","*","g","h"]:
+                    self.map_layout[y][x] = '0'
                     if v == "o":                        
                         self.pacgoms.append(Pacgom((x, y), self.CASE_SIZE))
                     elif v == "O":
@@ -120,7 +145,12 @@ class Maze:
                         self.ghosts_checkpoints['blinky_checkpoint'] = (x, y)
                     elif v == "*":
                         self.ghosts_checkpoints['clyde_checkpoint'] = (x, y)
-                    self.map_layout[y][x] = '0'
+                    elif v == "g":
+                        ghd_maze_pos_1 = (x, y)
+                        self.map_layout[y][x] = 'g'
+                    elif v == "h":
+                        ghd_maze_pos_2 = (x, y)
+                        self.map_layout[y][x] = 'h'
                 else:
                     orientation = None
                     if v == "a":
@@ -140,67 +170,8 @@ class Maze:
                         self.map_to_render.blit(WallTile.get_tile(orientation), (x*self.CASE_SIZE, y*self.CASE_SIZE))
 
                     self.map_layout[y][x] = v
-    
-    def calcul_ai_grid(self, maze_pos):
-        self.ai_grid = [[999]*(len(self.level_data[0])+5) for x in range(len(self.level_data)+5)]  
-        #self.ai_to_render = pygame.Surface((self.width_height_px[0], self.width_height_px[1]), flags=pygame.SRCALPHA)
-        #self.ai_to_render.fill((0,0,0,0))
-        i = 1
-        to_treat = [[maze_pos],[]]
-        for targets in to_treat:
-            if len(targets) != 0:
-                for p in targets:
-                    if self.get_map_element((p[0]-1,p[1])) == "0" and self.get_ai_value((p[0]-1,p[1])) >= 999:
-                        to_treat[i].append((p[0]-1,p[1]))
-                        self.ai_grid[p[1]][p[0]-1] = i
-                        #self.ai_to_render.blit(pygame.font.SysFont(None,18).render(str(i), True, (255,255,0)), ((p[0]-1)*self.CASE_SIZE+2, (p[1])*self.CASE_SIZE+2))
-                    # droite
-                    if self.get_map_element((p[0]+1,p[1])) == "0" and self.get_ai_value((p[0]+1,p[1])) >= 999:
-                        to_treat[i].append((p[0]+1,p[1]))
-                        self.ai_grid[p[1]][p[0]+1] = i
-                        #self.ai_to_render.blit(pygame.font.SysFont(None,18).render(str(i), True, (255,255,0)), ((p[0]+1)*self.CASE_SIZE+2, (p[1])*self.CASE_SIZE+2))
-                    # haut
-                    if self.get_map_element((p[0],p[1]-1)) == "0" and self.get_ai_value((p[0],p[1]-1)) >= 999:
-                        to_treat[i].append((p[0],p[1]-1))
-                        self.ai_grid[p[1]-1][p[0]] = i
-                        #self.ai_to_render.blit(pygame.font.SysFont(None,18).render(str(i), True, (255,255,0)), ((p[0])*self.CASE_SIZE+2, (p[1]-1)*self.CASE_SIZE+2))
-                    # bas
-                    if self.get_map_element((p[0],p[1]+1)) == "0" and self.get_ai_value((p[0],p[1]+1)) >= 999:
-                        to_treat[i].append((p[0],p[1]+1))
-                        self.ai_grid[p[1]+1][p[0]] = i
-                        #self.ai_to_render.blit(pygame.font.SysFont(None,18).render(str(i), True, (255,255,0)), ((p[0])*self.CASE_SIZE+2, (p[1]+1)*self.CASE_SIZE+2))
-                to_treat.append([])                    
-                i += 1
-        self.ai_grid[maze_pos[1]][maze_pos[0]] = 0    
-        #self.ai_to_render.blit(pygame.font.SysFont(None,18).render(str(0), True, (255,255,0)), ((maze_pos[0])*self.CASE_SIZE+2, (maze_pos[1])*self.CASE_SIZE+2))
-
-    def create_ai_grid_values_to(self, target_maze_pos):
-        ai_grid = [[999]*(len(self.level_data[0])+5) for x in range(len(self.level_data)+5)]  
-        i = 1
-        to_treat = [[target_maze_pos],[]]
-        for targets in to_treat:
-            if len(targets) != 0:
-                for p in targets:
-                    # left
-                    if self.get_map_element((p[0]-1,p[1])) == "0" and self.get_ai_value((p[0]-1,p[1]), ai_grid) >= 999:
-                        to_treat[i].append((p[0]-1,p[1]))
-                        ai_grid[p[1]][p[0]-1] = i
-                    # droite
-                    if self.get_map_element((p[0]+1,p[1])) == "0" and self.get_ai_value((p[0]+1,p[1]), ai_grid) >= 999:
-                        to_treat[i].append((p[0]+1,p[1]))
-                        ai_grid[p[1]][p[0]+1] = i
-                    # haut
-                    if self.get_map_element((p[0],p[1]-1)) == "0" and self.get_ai_value((p[0],p[1]-1), ai_grid) >= 999:
-                        to_treat[i].append((p[0],p[1]-1))
-                        ai_grid[p[1]-1][p[0]] = i
-                    # bas
-                    if self.get_map_element((p[0],p[1]+1)) == "0" and self.get_ai_value((p[0],p[1]+1), ai_grid) >= 999:
-                        to_treat[i].append((p[0],p[1]+1))
-                        ai_grid[p[1]+1][p[0]] = i
-                to_treat.append([])                    
-                i += 1
-        ai_grid[target_maze_pos[1]][target_maze_pos[0]] = 0    
-        return ai_grid
+        # Création de la porte
+        self.ghost_house_door = GhostHouseDoor(self.game, self.CASE_SIZE, ghd_maze_pos_1, ghd_maze_pos_2)
     
     def verify_win(self):
         if len(self.pacgoms) == 0 and len(self.super_pacgoms) == 0 and self.game.game_stat == "playing":

@@ -29,12 +29,12 @@ class PacManGame():
         self.maze = Maze(self, (0,0), 0)
         self.game_stat = "playing"
 
-        self.scoreboard = Scoreboard(self, (self.maze.width_height_px[0],50))
+        self.scoreboard = Scoreboard(self, (self.maze.width_height_px[0],0))
 
         # Création de la fenêtre
         self.window_width = self.maze.width_height_px[0]
         self.window_height = self.maze.width_height_px[1]
-        self.window = pygame.display.set_mode((self.window_width+200,self.window_height))
+        self.window = pygame.display.set_mode((self.window_width+300,self.window_height))
         pygame.display.set_caption("Super Pac Man GALAXY")
         ## pygame.display.set_icon(ResourcesProviders.get.icon_img)
 
