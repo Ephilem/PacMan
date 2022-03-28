@@ -21,6 +21,12 @@ class GhostHouseDoor:
         self.left_pos = [a*self.case_size for a in left_maze_pos]
         self.right_pos = [a*self.case_size for a in right_maze_pos]
 
+        # Coordonner pour que les fantome passe d'un coter de l'autre
+        self.interior_left_side_maze_pos =  (left_maze_pos[0],left_maze_pos[1]+1)
+        self.interior_right_side_maze_pos =  (right_maze_pos[0],right_maze_pos[1]+1)
+        self.exterior_left_side_maze_pos =  (left_maze_pos[0],left_maze_pos[1]-1)
+        self.exterior_right_side_maze_pos =  (right_maze_pos[0],right_maze_pos[1]-1)
+
         pass
 
     def render(self, surface):

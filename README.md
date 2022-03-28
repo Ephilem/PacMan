@@ -32,6 +32,8 @@ entre temps - avancement des ia quand on mange une super pacgom et correction de
 
 22/03/2022 - avancer scoreboard & début système d'event et ghost house - début du leadboard (qui est dans le scoreboard) et début du système de sortir de la ghost house et d'event
 
+entre temps - srotie des gantome de la salle a des temps définie finie
+
 ## Map Making
 
 0 = vide
@@ -54,7 +56,7 @@ C = clyde<br/>
 
 / = pinky checkpoint<br/>
 \- = inky checkpoint<br/> \* = blinky checkpoint<br/>
-\- = clyde checkpoint<br/>
+\+ = clyde checkpoint<br/>
 
 g = ghost house door left
 h = ghost house door right

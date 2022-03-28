@@ -29,6 +29,18 @@ class PacManGame():
         self.maze = Maze(self, (0,0), 0)
         self.game_stat = "playing"
 
+        # les options de la partie (les scattering time n'est pas utiliser par blinky au début)
+        self.game_options = {
+            'pinky_get_out_at': 500,
+            'clyde_get_out_at': 1000,
+            'inky_get_out_at': 1500,
+            'blinky_scattering_time': 800,
+            'clyde_scattering_time': 800,
+            'inky_scattering_time': 500,
+            'pinky_scattering_time': 500,
+        }
+        
+
         self.scoreboard = Scoreboard(self, (self.maze.width_height_px[0],0))
 
         # Création de la fenêtre

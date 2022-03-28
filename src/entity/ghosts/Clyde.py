@@ -6,9 +6,9 @@ import random, pygame
 class Clyde(Ghost):
 
     def __init__(self, game, maze_pos, case_size):
-        super().__init__([pygame.transform.scale(frame, (case_size, case_size)) for frame in ResourcesProvider.get.clyde_img_frames], maze_pos, case_size, game) 
+        super().__init__([pygame.transform.scale(frame, (case_size, case_size)) for frame in ResourcesProvider.get.clyde_img_frames], maze_pos, case_size, game, "clyde") 
     
-    def tick_ai(self):        
+    def chasing_ai(self):        
         if self.mode == "chasing":     
             if not self.is_moving:
                 self.move_ai_rand()

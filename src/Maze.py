@@ -25,17 +25,6 @@ class Maze:
         # permet de savoir combien de temps dure la game et de actionner des évènement comme un fantome sort de la maison
         self.tick = 0
 
-        # les options de la partie
-        self.maze_options = {
-            'pinky_get_out_at': 500,
-            'clyde_get_out_at': 1000,
-            'inky_get_out_at': 1500,
-            'blinky_scattering_time': 100,
-            'clyde_scattering_time': 100,
-            'inky_scattering_time': 100,
-            'pinky_scattering_time': 100,
-        }
-        
         WallTile(self.CASE_SIZE)
         
         self.level_data = self.read_level_file(1)
@@ -105,6 +94,12 @@ class Maze:
     
     def tick_event_sys(self):
         self.tick += 1
+        if self.tick == self.game.game_options["pinky_get_out_at"]:
+            self.ghost_registry['pinky'].getting_out_ghost_house()
+        if self.tick == self.game.game_options["inky_get_out_at"]:
+            self.ghost_registry['inky'].getting_out_ghost_house()
+        if self.tick == self.game.game_options["clyde_get_out_at"]:
+            self.ghost_registry['clyde'].getting_out_ghost_house()
     
     def get_map_element(self, maze_pos):
         return self.map_layout[maze_pos[1]][maze_pos[0]] 

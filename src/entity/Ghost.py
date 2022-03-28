@@ -5,22 +5,45 @@ from entity.MovingEntity import MovingEntity
 
 class Ghost(MovingEntity):
 
-    def __init__(self, texture, maze_pos, case_size, game, not_spawning_in_the_ghost_house=False):
+    def __init__(self, texture, maze_pos, case_size, game, ghost_name, not_spawning_in_the_ghost_house=False):
         self.GHOST_TEXTURE = texture
+        self.GHOST_NAME = ghost_name
         self.FEAR_GHOST_TEXTURE = [pygame.transform.scale(frame, (case_size, case_size)) for frame in ResourcesProvider.get.fear_img_frames]
         super().__init__(self.GHOST_TEXTURE, maze_pos, 15, case_size, game, ticks_between_frame=30)
-        self.mode = "scattering" # les modes : scattering, chasing, fear, eated  
-        if not_spawning_in_the_ghost_house:
-            self.mode = "scattering"      
+        self.mode = "waiting" # les modes : scattering, chasing, fear, eated, getting_in_ghost_house, getting_out_ghost_house, waiting
         self.set_frame_min_max(min=0,max=2)
         self.fear_tick = 0
         self.scattering_tick = 0
 
-        ## Pour faire sortir de la ghost house
-        self.getting_out_of_the_ghost_house_ticking = 0
+        if not_spawning_in_the_ghost_house:
+            self.mode = "scattering"
+            self.scattering_tick = 700
 
+        ## Cela permet de controller la sortie/l'entrer du fantome
+        self.ghost_house_tick = 0
+        self.ghost_house_step = "nothing" # valeur possible : goto, passing
+        self.ghost_house_passing_side = None
+
+    def render(self, surface, pos_to_render):
+        surface.blit(self.frame, self.get_pos_to_render(pos_to_render))
+        self.tick_animation()
+        if not self.mode == "waiting":
+            self.tick_movement_system(self)
+            if self.fear_tick != 0:
+                self.fear_ai()
+            elif self.mode == "scattering":
+                self.scattering_ai()
+            elif self.mode == "getting_out_ghost_house":
+                self.getting_out_of_the_ghost_house_ai()
+            else:
+                self.chasing_ai()
+            
+    
+    ####################################################
+    #### Les fontion AI qui sont appeller en boucle ####
+    ####################################################
     @abstractmethod
-    def tick_ai(self):
+    def chasing_ai(self):
         pass
 
     def fear_ai(self):
@@ -33,28 +56,49 @@ class Ghost(MovingEntity):
             self.rotate(self.moving_direction)
         
         # AI mouvement (les mouvements sont aléatoire)        
-        self.move_ai_rand()
-
-    def render(self, surface, pos_to_render):
-        surface.blit(self.frame, self.get_pos_to_render(pos_to_render))
-        self.tick_animation()
-        self.tick_movement_system(self)
-        if self.fear_tick != 0:
-            self.fear_ai()
-        else:
-            self.tick_ai()
-    
-    def rotate(self, direction):
-        if not self.mode == "fear":
-            if direction == "left":
-                self.set_frame_min_max(min=6,max=7)
-            if direction == "right":
-                self.set_frame_min_max(min=0,max=1)
-            if direction == "up":
-                self.set_frame_min_max(min=4,max=5)
-            if direction == "down":
-                self.set_frame_min_max(min=2,max=3)
+        self.move_ai_rand()  
         
+    def getting_out_of_the_ghost_house_ai(self):
+        ghd = self.game.maze.ghost_house_door
+
+        if self.ghost_house_step == "goto":
+            if self.maze_pos == ghd.interior_left_side_maze_pos or self.maze_pos == ghd.interior_right_side_maze_pos:
+                self.ghost_house_step = "passing"
+            elif not self.is_moving:           
+                # le faire bouger toujours vers le côter gauche de la porte. Si il passe du côter droit, il sera pris directement
+                self.move_ai(ghd.interior_left_side_maze_pos)
+        elif self.ghost_house_step == "passing":
+            if self.maze_pos == ghd.exterior_right_side_maze_pos or self.maze_pos == ghd.exterior_left_side_maze_pos:
+                self.ghost_house_step = None
+                self.scattering()  
+            elif not self.is_moving:           
+                self.forcing_movement_to("up")  
+
+    def scattering_ai(self):
+        self.scattering_tick -= 1
+        #print(self.GHOST_NAME, self.scattering_tick, self.mode)
+        if self.scattering_tick <= 0:
+            self.mode = "chasing"
+        
+        # Par rapport au fantome, on le fait tourner dans un coins
+        if self.GHOST_NAME == "blinky":
+            self.move_ai([x//self.case_size+5 for x in self.game.maze.width_height_px])
+        elif self.GHOST_NAME == "pinky":
+            self.move_ai([-5,-5])
+        elif self.GHOST_NAME == "inky":
+            corner = [x//self.case_size+5 for x in self.game.maze.width_height_px]
+            corner[0] = -5 
+            self.move_ai(corner)
+        elif self.GHOST_NAME == "clyde":
+            corner = [x//self.case_size+5 for x in self.game.maze.width_height_px]
+            corner[1] = -5 
+            self.move_ai(corner)
+
+
+
+    ##############################################
+    #### Permet de changer le mode du fantome ####
+    ##############################################
     def fear(self):
         """
         mettre le fantome en mode 'fear'
@@ -76,7 +120,22 @@ class Ghost(MovingEntity):
             self.mode = "eated"
             self.fear_tick = 0
     
-    #### Bon fonctionnement permettant les ia de fonctionner ####
+    def scattering(self):
+        """
+        mettre le fantome en mode 'scattering'
+        """
+        if self.mode == "chasing" or self.mode == "getting_in_ghost_house" or self.mode == "getting_out_ghost_house" or self.mode == "waiting":
+            self.mode = "scattering"
+            self.scattering_tick = self.game.game_options[self.GHOST_NAME+"_scattering_time"]
+
+    def getting_out_ghost_house(self):
+        self.mode = "getting_out_ghost_house"
+        self.ghost_house_step = "goto"
+
+
+    ###################################################
+    #### Fonction permettant les ia de fonctionner ####
+    ###################################################
     def move_ai(self, target_maze_pos, rotate=True):
         """
         permet de bouger vers un point
@@ -95,6 +154,24 @@ class Ghost(MovingEntity):
         if rotate:
             self.rotate(best_direction_and_distance[0])
     
+    def rotate(self, direction):
+        if not self.mode == "fear":
+            if direction == "left":
+                self.set_frame_min_max(min=6,max=7)
+            if direction == "right":
+                self.set_frame_min_max(min=0,max=1)
+            if direction == "up":
+                self.set_frame_min_max(min=4,max=5)
+            if direction == "down":
+                self.set_frame_min_max(min=2,max=3)
+        
+    def forcing_movement_to(self, direction):
+        """
+        une fonction permettant de ce dépacer sans faire attention au obstacle
+        """
+        self.move(direction)
+        self.rotate(direction)
+
     def move_ai_rand(self, rotate=True):
         """
         permet de bouger de façon aléatoire. utiliser par clyde et les phantome en mode 'fear'
