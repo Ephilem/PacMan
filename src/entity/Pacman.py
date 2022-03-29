@@ -10,6 +10,10 @@ class Pacman(MovingEntity):
         self.direction_to_go = None
         self.__last_rotation = 0
 
+        # Un système de combot est mis. Quand pacman mange une super pacgom, alors pendant le temps de l'effet, a chaque fantome manger, il remporte plus de point
+        self.eated_ghost_combot = 0
+        self.combot_tick = 0 # il est égal au temps qu'on les fantome à être en mode fear au démarrage
+
     def render(self, surface, pos_to_render):
         surface.blit(self.frame, self.get_pos_to_render(pos_to_render))
         if not self.direction_to_go is None:
@@ -22,8 +26,7 @@ class Pacman(MovingEntity):
             potential_pacgom = [x for x in self.game.maze.pacgoms if x.maze_pos == self.moving_to]
             if len(potential_pacgom) != 0:
                 self.game.maze.remove_pacgom(pacgom=potential_pacgom[0])
-                self.game.scoreboard.add_score(10)
-                
+                self.game.scoreboard.add_score(10)              
 
 
             # Vérif si il y a une super pacgom où pacman se déplace
@@ -31,6 +34,7 @@ class Pacman(MovingEntity):
             if len(potential_super_pacgom) != 0:
                 self.game.maze.super_pacgoms.remove(potential_super_pacgom[0])
                 self.game.maze.set_ghosts_fear_mode()
+                self.combot_tick = self.game.game_options['ghost_fear_time']
                 self.game.scoreboard.add_score(50) 
 
         # COLLISION AVEC FANTOME
@@ -40,8 +44,19 @@ class Pacman(MovingEntity):
             ghost_size = ghost.textures[0].get_size()
             pacman_pos = [x*self.case_size for x in self.maze_pos]
             pacman_size = self.textures[0].get_size()
-            if not ghost.mode in ["fear","eated"] and self.game.game_stat == "playing" and (pacman_pos[0] < ghost_pos[0] + ghost_size[0]) and (ghost_pos[0] < pacman_pos[0] + pacman_size[0]) and (pacman_pos[1] < ghost_pos[1] + ghost_size[1]) and (ghost_pos[1] < pacman_pos[1] + pacman_size[1]) :
-                self.game.game_stat = "losing"
+            if self.game.game_stat == "playing" and (pacman_pos[0] < ghost_pos[0] + ghost_size[0]) and (ghost_pos[0] < pacman_pos[0] + pacman_size[0]) and (pacman_pos[1] < ghost_pos[1] + ghost_size[1]) and (ghost_pos[1] < pacman_pos[1] + pacman_size[1]) :
+                if not ghost.mode in ["fear","eated"]:
+                    self.game.game_stat = "losing"
+                elif ghost.mode == "fear":
+                    ghost.eated()
+                    self.eated_ghost_combot += 1
+                    self.game.scoreboard.add_score(2**self.eated_ghost_combot*100)
+        
+        # Faire ticker le combot tick
+        if self.combot_tick > 0:
+            self.combot_tick -= 1
+        else:
+            self.eated_ghost_combot = 0
             
 
 

@@ -34,6 +34,8 @@ entre temps - avancement des ia quand on mange une super pacgom et correction de
 
 entre temps - srotie des gantome de la salle a des temps définie finie
 
+29/03/2022 - faire en sorte que les fantome peuvent se faire manger, avancer le leadboard, et implémenter le système de combot quand tu mange les fantomes - les fantome peuvent se faire manger + système de combot & leadboard avancé
+
 ## Map Making
 
 0 = vide

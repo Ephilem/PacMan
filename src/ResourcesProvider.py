@@ -21,6 +21,7 @@ class ResourcesProvider:
         self.inky_img_frames = ResourcesProvider.img_to_animation_frames(pygame.image.load(ResourcesProvider.__get_asset_path("inky.png")), 15)
         self.pinky_img_frames = ResourcesProvider.img_to_animation_frames(pygame.image.load(ResourcesProvider.__get_asset_path("pinky.png")), 15)
         self.fear_img_frames = ResourcesProvider.img_to_animation_frames(pygame.image.load(ResourcesProvider.__get_asset_path("fear.png")), 15)
+        self.eated_img_frames = ResourcesProvider.img_to_animation_frames(pygame.image.load(ResourcesProvider.__get_asset_path("eated.png")), 15)
 
         self.score_font = pygame.font.Font(ResourcesProvider.__get_asset_path("score.ttf"), 30)
         self.bungee_font = pygame.font.Font(ResourcesProvider.__get_asset_path("bungee.ttf"), 32)

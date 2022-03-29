@@ -9,8 +9,9 @@ class Ghost(MovingEntity):
         self.GHOST_TEXTURE = texture
         self.GHOST_NAME = ghost_name
         self.FEAR_GHOST_TEXTURE = [pygame.transform.scale(frame, (case_size, case_size)) for frame in ResourcesProvider.get.fear_img_frames]
+        self.EATED_GHOST_TEXTURE = [pygame.transform.scale(frame, (case_size, case_size)) for frame in ResourcesProvider.get.eated_img_frames]
         super().__init__(self.GHOST_TEXTURE, maze_pos, 15, case_size, game, ticks_between_frame=30)
-        self.mode = "waiting" # les modes : scattering, chasing, fear, eated, getting_in_ghost_house, getting_out_ghost_house, waiting
+        self.mode = "waiting" # les modes : scattering, chasing, fear, eated, getting_out_ghost_house, waiting
         self.set_frame_min_max(min=0,max=2)
         self.fear_tick = 0
         self.scattering_tick = 0
@@ -35,6 +36,8 @@ class Ghost(MovingEntity):
                 self.scattering_ai()
             elif self.mode == "getting_out_ghost_house":
                 self.getting_out_of_the_ghost_house_ai()
+            elif self.mode == "eated":
+                self.eated_ai()
             else:
                 self.chasing_ai()
             
@@ -70,9 +73,32 @@ class Ghost(MovingEntity):
         elif self.ghost_house_step == "passing":
             if self.maze_pos == ghd.exterior_right_side_maze_pos or self.maze_pos == ghd.exterior_left_side_maze_pos:
                 self.ghost_house_step = None
+                # quand il sorte de la maison, qu'il passe en scattering
                 self.scattering()  
             elif not self.is_moving:           
                 self.forcing_movement_to("up")  
+    
+    def eated_ai(self):
+        """
+        On poourrai l'appeller aussi getting_in_the_ghost_house_ai, car sa revient à la même chose (en étant manger, il doit rentrer dans la maison)
+        """
+        ghd = self.game.maze.ghost_house_door
+
+        if self.ghost_house_step == "goto":
+            if self.maze_pos == ghd.exterior_left_side_maze_pos or self.maze_pos == ghd.exterior_right_side_maze_pos:
+                self.ghost_house_step = "passing"
+                self.change_max_sleep_tick(15)
+            elif not self.is_moving:           
+                # le faire bouger toujours vers le côter gauche de la porte. Si il passe du côter droit, il sera pris directement
+                self.move_ai(ghd.exterior_left_side_maze_pos)
+        elif self.ghost_house_step == "passing":
+            if self.maze_pos == ghd.interior_right_side_maze_pos or self.maze_pos == ghd.interior_left_side_maze_pos:
+                self.ghost_house_step = None
+                # quand il rentre dans la maison, qu'il passe en normal et qui sorte de la maison    
+                self.change_texture(self.GHOST_TEXTURE, True)
+                self.getting_out_ghost_house()  
+            elif not self.is_moving:           
+                self.forcing_movement_to("down")  
 
     def scattering_ai(self):
         self.scattering_tick -= 1
@@ -105,7 +131,7 @@ class Ghost(MovingEntity):
         """
         if self.mode == "scattering" or self.mode == "chasing":
             self.mode = "fear"
-            self.fear_tick = 500
+            self.fear_tick = self.game.game_options['ghost_fear_time']
             self.change_max_sleep_tick(20)
             self.set_frame_min_max(min=0,max=1)
             self.change_texture(self.FEAR_GHOST_TEXTURE, True) 
@@ -119,6 +145,10 @@ class Ghost(MovingEntity):
         if self.mode == "fear":
             self.mode = "eated"
             self.fear_tick = 0
+            self.ghost_house_step = "goto"
+            self.change_max_sleep_tick(5)
+            self.set_frame_min_max(min=0,max=2)
+            self.change_texture(self.EATED_GHOST_TEXTURE, True)
     
     def scattering(self):
         """

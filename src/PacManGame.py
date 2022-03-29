@@ -1,6 +1,7 @@
 from telnetlib import GA
 import pygame, time
 from EndScreen import Endscreen
+from Highscore import Highscore
 from Maze import *
 from Button import *
 from ResourcesProvider import *
@@ -31,6 +32,7 @@ class PacManGame():
 
         # les options de la partie (les scattering time n'est pas utiliser par blinky au début)
         self.game_options = {
+            'ghost_fear_time': 700,
             'pinky_get_out_at': 500,
             'clyde_get_out_at': 1000,
             'inky_get_out_at': 1500,
@@ -42,6 +44,7 @@ class PacManGame():
         
 
         self.scoreboard = Scoreboard(self, (self.maze.width_height_px[0],0))
+        self.highscore_file = Highscore()
 
         # Création de la fenêtre
         self.window_width = self.maze.width_height_px[0]

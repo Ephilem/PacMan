@@ -37,15 +37,23 @@ class Scoreboard():
 
         surface.blit(self.scoreboard_surface, (self.game.maze.width_height_px[0],0))
 
-        text = ResourcesProvider.get.users_font.render("Toto", True, (0, 0, 0))
-        score_text_size = text.get_size()
-        self.scoreboard_surface.blit(text, (surface_size[0]//2- score_text_size[1]//2, 150))
+        username_text = ResourcesProvider.get.users_font.render("Toto", True, (0, 0, 0))
+        username_text_size = username_text.get_size()
+        self.scoreboard_surface.blit(username_text, (surface_size[0]//4-username_text_size[0]//2, 150))
 
+        record_text = ResourcesProvider.get.users_font.render("--------", True, (0, 0, 0))
+        record_text_size = record_text.get_size()
+        self.scoreboard_surface.blit(record_text, ((surface_size[0]*3/4)-record_text_size[0]//2, 150))
+        
         surface.blit(self.scoreboard_surface, (self.game.maze.width_height_px[0],0))
 
-        text = ResourcesProvider.get.users_font.render("Nathalia", True, (0, 0, 0))
-        score_text_size = text.get_size()
-        self.scoreboard_surface.blit(text, (325, 150))
+        username_text = ResourcesProvider.get.users_font.render("John", True, (0, 0, 0))
+        username_text_size = username_text.get_size()
+        self.scoreboard_surface.blit(username_text, (surface_size[0]//4-username_text_size[0]//2, 200))
+
+        record_text = ResourcesProvider.get.users_font.render("--------", True, (0, 0, 0))
+        record_text_size = record_text.get_size()
+        self.scoreboard_surface.blit(record_text, ((surface_size[0]*3/4)-record_text_size[0]//2, 200))
 
         surface.blit(self.scoreboard_surface, (self.game.maze.width_height_px[0],0))
 
