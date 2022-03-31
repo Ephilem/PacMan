@@ -32,9 +32,11 @@ entre temps - avancement des ia quand on mange une super pacgom et correction de
 
 22/03/2022 - avancer scoreboard & début système d'event et ghost house - début du leadboard (qui est dans le scoreboard) et début du système de sortir de la ghost house et d'event
 
-entre temps - srotie des gantome de la salle a des temps définie finie
+entre temps - sortie des fantomeq de la salle a des temps définie finie
 
-29/03/2022 - faire en sorte que les fantome peuvent se faire manger, avancer le leadboard, et implémenter le système de combot quand tu mange les fantomes - les fantome peuvent se faire manger + système de combot & leadboard avancé
+29/03/2022 - faire en sorte que les fantome peuvent se faire manger, avancer le leadboard, et implémenter le système de combo quand tu mange les fantomes - les fantomeq peuvent se faire manger + système de combot & leadboard avancé
+
+31/03/20022 - Leaderboard qui trie les scores par ordre décroissant, bouton pour commencer une nouvelle partie et fond transparant pour + de visibilité
 
 ## Map Making
 
@@ -55,10 +57,6 @@ P = pinky<br/>
 I = inky<br/>
 B = blinky<br/>
 C = clyde<br/>
-
-/ = pinky checkpoint<br/>
-\- = inky checkpoint<br/> \* = blinky checkpoint<br/>
-\+ = clyde checkpoint<br/>
 
 g = ghost house door left
 h = ghost house door right

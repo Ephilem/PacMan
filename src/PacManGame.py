@@ -27,7 +27,7 @@ class PacManGame():
 
         self.clock = pygame.time.Clock()
         
-        self.maze = Maze(self, (0,0), 0)
+        self.maze = Maze(self, (0,0), '1')
         self.game_stat = "playing"
 
         # les options de la partie (les scattering time n'est pas utiliser par blinky au début)
@@ -44,7 +44,6 @@ class PacManGame():
         
 
         self.scoreboard = Scoreboard(self, (self.maze.width_height_px[0],0))
-        self.highscore_file = Highscore()
 
         # Création de la fenêtre
         self.window_width = self.maze.width_height_px[0]
@@ -104,7 +103,7 @@ class PacManGame():
         pygame.display.flip()
 
     def restart_game(self):
-        self.maze = Maze(self, (0,0), 0)
+        self.maze = Maze(self, (0,0), '1')
         self.game_stat = "playing"
         self.scoreboard.reset()
 

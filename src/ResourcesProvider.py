@@ -26,6 +26,7 @@ class ResourcesProvider:
         self.score_font = pygame.font.Font(ResourcesProvider.__get_asset_path("score.ttf"), 30)
         self.bungee_font = pygame.font.Font(ResourcesProvider.__get_asset_path("bungee.ttf"), 32)
         self.users_font = pygame.font.Font(ResourcesProvider.__get_asset_path("bungee.ttf"), 22)
+        self.user_input_box_font = pygame.font.Font(ResourcesProvider.__get_asset_path("score.ttf"), 32)
         # self.less_go_sound = pygame.mixer.Sound('assets/less_go.mp3')
 
 

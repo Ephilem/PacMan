@@ -19,6 +19,7 @@ class Maze:
     def __init__(self, game, pos, level):
         self.game = game
         self.game.render_registry.append(self)
+        self.level = level
 
         self.CASE_SIZE = 25
 
@@ -27,7 +28,7 @@ class Maze:
 
         WallTile(self.CASE_SIZE)
         
-        self.level_data = self.read_level_file(1)
+        self.level_data = self.read_level_file(self.level)
         self.width_height_px =  len(self.level_data[0])*self.CASE_SIZE,len(self.level_data)*self.CASE_SIZE 
         
         # Pour optimiser, on fait en sorte de calculer de créer la map en entier pour évité de la refaire (donc + de performance)
