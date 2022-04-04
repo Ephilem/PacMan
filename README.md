@@ -38,6 +38,8 @@ entre temps - sortie des fantomeq de la salle a des temps définie finie
 
 31/03/20022 - Leaderboard qui trie les scores par ordre décroissant, bouton pour commencer une nouvelle partie et fond transparant pour + de visibilité
 
+04/04/2022 - animation image highscore, choix de sauvegarde d'un nouveau highscore si joueur déjà dans le highscore
+
 ## Map Making
 
 0 = vide

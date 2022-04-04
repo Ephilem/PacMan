@@ -1,3 +1,4 @@
+from importlib.resources import Resource
 import pygame, os, sys
 
 class ResourcesProvider:
@@ -15,6 +16,7 @@ class ResourcesProvider:
         self.super_pacgom_img_frames = ResourcesProvider.img_to_animation_frames(pygame.image.load(ResourcesProvider.__get_asset_path("super_pacgom.png")), 16)
         self.pacman_eating_img_frames = ResourcesProvider.img_to_animation_frames(pygame.image.load(ResourcesProvider.__get_asset_path("pacman_eating.png")), 13)
         self.ghost_house_door_img = pygame.image.load(ResourcesProvider.__get_asset_path("ghost_house_door.png"))
+        self.highscore_img = pygame.image.load(ResourcesProvider.__get_asset_path("highscore.png"))
 
         self.blinky_img_frames = ResourcesProvider.img_to_animation_frames(pygame.image.load(ResourcesProvider.__get_asset_path("blinky.png")), 15)
         self.clyde_img_frames = ResourcesProvider.img_to_animation_frames(pygame.image.load(ResourcesProvider.__get_asset_path("clyde.png")), 15)
@@ -26,7 +28,9 @@ class ResourcesProvider:
         self.score_font = pygame.font.Font(ResourcesProvider.__get_asset_path("score.ttf"), 30)
         self.bungee_font = pygame.font.Font(ResourcesProvider.__get_asset_path("bungee.ttf"), 32)
         self.users_font = pygame.font.Font(ResourcesProvider.__get_asset_path("bungee.ttf"), 22)
+        self.highscore_font = pygame.font.Font(ResourcesProvider.__get_asset_path("score.ttf"), 20)
         self.user_input_box_font = pygame.font.Font(ResourcesProvider.__get_asset_path("score.ttf"), 32)
+        self.debug_font = pygame.font.Font(ResourcesProvider.__get_asset_path("score.ttf"), 10)
         # self.less_go_sound = pygame.mixer.Sound('assets/less_go.mp3')
 
 

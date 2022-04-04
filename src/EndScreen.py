@@ -1,4 +1,6 @@
+import math
 from Button import Button
+from Highscore import Highscore
 from ResourcesProvider import ResourcesProvider
 import pygame, re
 
@@ -16,13 +18,19 @@ class Endscreen():
         # on enlève le labyrinthe du render registry  
         game.render_registry.remove(game.maze)
         maze_size = self.game.maze.width_height_px
-        self.button_continue = Button(self.game, (maze_size[0]//2-150//2,maze_size[1]-200), (150,40), "Continuer", self.on_score_button_clicked, (104, 159, 56), (255,255,255))
+        self.button_continue = Button(self.game, (maze_size[0]//2-150//2,maze_size[1]-200), (150,40), "Continuer", self.on_score_button_clicked, (104, 159, 56), (54, 111, 0), (0,0,0))
         
 
         self.username = ''
         self.cursor_blinking_tick = 0
 
+        self.highscore = False
+        self.highscore_animation_tick = 0
+
     def on_score_button_clicked(self):
+        if not len(self.username) == 0:
+            Highscore.set_highscore(self.username, self.game.scoreboard.score_value, self.game.maze.level)
+            self.game.scoreboard.update_render()
         self.game.render_registry.remove(self)
         self.button_continue.unregister()
         self.game.on_key_press_registry.remove(self)
@@ -31,14 +39,18 @@ class Endscreen():
     
     def on_key_press(self, event):
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RETURN:
-                print(self.username)
-                self.username = ''
-            elif event.key == pygame.K_BACKSPACE:
+            # vérifier si il y a eu un changement
+            username_changed = False
+            if event.key == pygame.K_BACKSPACE:
                 self.username = self.username[:-1]
+                username_changed = True
             else:
                 if re.match("\A[A-Z0-9]\Z", event.unicode.upper()) and len(self.username) < 10:
                     self.username += event.unicode.upper()
+                    username_changed = True
+            if username_changed:
+                self.highscore = Highscore.is_highscore(self.username, self.game.scoreboard.score_value, self.game.maze.level)
+            
 
     def render(self, surface):
         surface.blit(self.screenshot, (0,0))
@@ -74,7 +86,11 @@ class Endscreen():
         self.cursor_blinking_tick += 1 
         if self.cursor_blinking_tick > 50:
             self.cursor_blinking_tick = 0
-
-
-
+        
+        ### Rendue de l'highscore ###
+        if self.highscore:
+            self.highscore_animation_tick += 1
+            to_scale = round(math.cos(self.highscore_animation_tick*(1/25))*10+10)
+            image_size = (250,67)
+            surface.blit(pygame.transform.scale(ResourcesProvider.get.highscore_img, (to_scale+image_size[0], to_scale+image_size[1])), (maze_size[0]//2-image_size[0]//2-to_scale//2,maze_size[1]//4-image_size[1]//2-to_scale//2))
 

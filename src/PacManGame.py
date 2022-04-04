@@ -98,14 +98,23 @@ class PacManGame():
         self.window.fill((0,0,0))
         for elem in self.render_registry:
             elem.render(self.window)
-        self.window.blit(pygame.font.SysFont(None,48).render(str(round(self.clock.get_fps())), True, (255,255,255)), (self.maze.width_height_px[0]+10,0))
-        self.window.blit(pygame.font.SysFont(None,48).render(str(round(self.clock.get_time())), True, (255,255,255)), (self.maze.width_height_px[0]+10,30))
+        self.render_fps()
         pygame.display.flip()
 
     def restart_game(self):
         self.maze = Maze(self, (0,0), '1')
         self.game_stat = "playing"
         self.scoreboard.reset()
+    
+    def render_fps(self):
+        font = ResourcesProvider.get.debug_font
+        fps_text = "FPS:"+str(round(self.clock.get_fps()))
+        tick_text = "TICK:"+str(round(self.clock.get_time()))
+        fps_size = font.size(fps_text)
+        tick_size = font.size(tick_text)
+        self.window.blit(font.render(fps_text, True, (0,0,0)), (self.maze.width_height_px[0],self.maze.width_height_px[1]-fps_size[1]))
+        self.window.blit(font.render(tick_text, True, (0,0,0)), (self.maze.width_height_px[0]+80-tick_size[0],self.maze.width_height_px[1]-tick_size[1]))
+
 
 
 
