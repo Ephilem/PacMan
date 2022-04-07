@@ -58,7 +58,7 @@ class Maze:
         permet d'enveler une pacgom. si aucune pacgom n'est préciser, faire juste le render
         """
         if not pacgom is None:
-            self.game.maze.pacgoms.remove(pacgom)
+            self.pacgoms.remove(pacgom)
         self.pacgoms_surface = pygame.Surface(self.width_height_px, flags=pygame.SRCALPHA)
         for pacgom in self.pacgoms+self.super_pacgoms:
                 pacgom.render(self.pacgoms_surface, (pacgom.maze_pos[0]*self.CASE_SIZE, pacgom.maze_pos[1]*self.CASE_SIZE))

@@ -146,7 +146,7 @@ class Ghost(MovingEntity):
             self.mode = "eated"
             self.fear_tick = 0
             self.ghost_house_step = "goto"
-            self.change_max_sleep_tick(5)
+            self.change_max_sleep_tick(8)
             self.set_frame_min_max(min=0,max=2)
             self.change_texture(self.EATED_GHOST_TEXTURE, True)
     

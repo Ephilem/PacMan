@@ -18,7 +18,7 @@ class Button:
         #vérification du click
         mouse_pos = pygame.mouse.get_pos()
 
-        if pygame.Rect(self.pos[0], self.pos[1], self.size[0], self.size[1]).collidepoint(mouse_pos):
+        if pygame.Rect(self.pos[0], self.pos[1]-5, self.size[0], self.size[1]).collidepoint(mouse_pos):
             self.act()
 
     #afficher le bouton

@@ -30,7 +30,7 @@ class Endscreen():
     def on_score_button_clicked(self):
         if not len(self.username) == 0:
             Highscore.set_highscore(self.username, self.game.scoreboard.score_value, self.game.maze.level)
-            self.game.scoreboard.update_render()
+            self.game.scoreboard.update_render = True
         self.game.render_registry.remove(self)
         self.button_continue.unregister()
         self.game.on_key_press_registry.remove(self)
@@ -75,8 +75,8 @@ class Endscreen():
 
        
         end_text_font = pygame.font.SysFont(None, 24)
-        end_text_font_size = end_text_font.size("Entre ton pseudo si tu sauvegarde ton score")
-        surface.blit(end_text_font.render("Entre ton pseudo si tu sauvegarde ton score", True, (0,0,0)), ((maze_size[0]//2)-end_text_font_size[0]//2, maze_size[1]//2))
+        end_text_font_size = end_text_font.size("Note ton pseudo si tu veut sauvegarder ton score")
+        surface.blit(end_text_font.render("Note ton pseudo si tu veut sauvegarder ton score", True, (0,0,0)), ((maze_size[0]//2)-end_text_font_size[0]//2, maze_size[1]//2))
         
          #### Rendue du username input ####
         username_text_font = ResourcesProvider.get.user_input_box_font

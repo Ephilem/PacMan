@@ -34,6 +34,20 @@ class Highscore():
             writer = csv.writer(f, )
             writer.writerows(data)
     
+    def del_highscore(username, level):
+        # lire le contenu
+        data = Highscore.get(level)
+
+        # supprimer la valeur 
+        for i, row in enumerate(data):
+            if username == row[0]:
+                data.remove(row)
+
+        # sauvegarder
+        with open('highscore.csv', 'w', newline='', encoding='UTF-8') as f:
+            writer = csv.writer(f, )
+            writer.writerows(data)
+
     def is_highscore(username, score, level):
         for row in Highscore.get(level):
             if row[0] == username and row[2] == level:

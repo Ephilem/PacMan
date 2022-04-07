@@ -20,22 +20,22 @@ class Pacman(MovingEntity):
             super().tick_animation()
         
         self.tick_movement_system(self)
-        if self.is_moving and self.sleep_tick <= 1:
-            #self.game.maze.calcul_ai_grid(self.moving_to) 
-            # Vérif si il y a une pacgom où pacman se déplace
-            potential_pacgom = [x for x in self.game.maze.pacgoms if x.maze_pos == self.moving_to]
-            if len(potential_pacgom) != 0:
-                self.game.maze.remove_pacgom(pacgom=potential_pacgom[0])
-                self.game.scoreboard.add_score(10)              
 
+        # DETECTION DES PACGOMS
+        # Vérif si il y a une pacgom où pacman se déplace
+        potential_pacgom = [x for x in self.game.maze.pacgoms if x.maze_pos == self.maze_pos]
+        if len(potential_pacgom) != 0:
+            self.game.maze.remove_pacgom(pacgom=potential_pacgom[0])
+            self.game.scoreboard.add_score(10)     
 
-            # Vérif si il y a une super pacgom où pacman se déplace
-            potential_super_pacgom = [x for x in self.game.maze.super_pacgoms if x.maze_pos == self.moving_to]
-            if len(potential_super_pacgom) != 0:
-                self.game.maze.super_pacgoms.remove(potential_super_pacgom[0])
-                self.game.maze.set_ghosts_fear_mode()
-                self.combot_tick = self.game.game_options['ghost_fear_time']
-                self.game.scoreboard.add_score(50) 
+        # Vérif si il y a une super pacgom où pacman se déplace
+        potential_super_pacgom = [x for x in self.game.maze.super_pacgoms if x.maze_pos == self.maze_pos]
+        if len(potential_super_pacgom) != 0:
+            self.game.maze.super_pacgoms.remove(potential_super_pacgom[0])
+            self.game.maze.set_ghosts_fear_mode()
+            self.combot_tick = self.game.game_options['ghost_fear_time']
+            self.game.scoreboard.add_score(50) 
+
 
         # COLLISION AVEC FANTOME
         for ghost in self.game.maze.ghost_registry.values():

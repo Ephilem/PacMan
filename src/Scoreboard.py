@@ -46,19 +46,21 @@ class Scoreboard():
 
     def add_score(self, v):
         self.score_value += v
-        self.update_render()
+        self.update_render = True
 
     def reset(self):
         self.score_value = 0
-        self.update_render()
+        self.update_render = True
     
-    def update_render(self):
+    def delete_score_button(self, username, level):
+        Highscore.del_highscore(username, level)
         self.update_render = True
     
     def render_leaderboard(self): 
         # Avant de refaire le leadboard, on reset tout les boutons
         for b in self.delete_scores_buttons:
             b.unregister() 
+        self.delete_scores_buttons = []
 
         surface_size = self.scoreboard_surface.get_size()
         whp = self.game.maze.width_height_px
@@ -75,7 +77,7 @@ class Scoreboard():
             record_text_size = record_text.get_size()
             self.scoreboard_surface.blit(record_text, ((surface_size[0]*3/4)-record_text_size[0]//2, 150+index*35))
 
-            self.delete_scores_buttons.append(Button(self.game, (surface_size[0]-10+whp[0], 150+index*35), (10,10), "X", self.update_render, (221, 44, 0), (163, 0, 0), (255,255,255)))
+            self.delete_scores_buttons.append(Button(self.game, (surface_size[0]-20+whp[0], 150+index*35+(username_text_size[1]//2-6)), (15,15), "X", lambda: (self.delete_score_button(score[0], self.game.maze.level)), (221, 44, 0), (163, 0, 0), (255,255,255)))
 
 
     
