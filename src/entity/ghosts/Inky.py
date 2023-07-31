@@ -20,4 +20,12 @@ class Inky(Ghost):
                 self.move_with_ai_grid(self.ai_grid_values_to_checkpoint)
             if self.maze_pos == self.game.maze.ghosts_checkpoints["inky_checkpoint"]:
                 self.mode = "chasing"
-        
+
+    def eated_ai(self):
+        self.move_with_ai_grid(self.game.maze.inky_spawn_ai_grid)
+        if self.maze_pos == self.game.maze.ghosts_spawn["inky_spawn"]:
+            self.mode = "chasing"
+            self.is_eated = False
+            self.change_max_sleep_tick(15)
+            self.change_texture(self.GHOST_TEXTURE, True)
+            self.rotate(self.looking_direction)

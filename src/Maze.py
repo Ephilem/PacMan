@@ -11,8 +11,6 @@ from entity.ghosts.Inky import Inky
 from entity.ghosts.Blinky import Blinky
 from tile.WallTile import *
 
-
-
 class Maze:
 
     def __init__(self, game, pos, level):
@@ -24,7 +22,7 @@ class Maze:
         WallTile(self.CASE_SIZE)
         
         self.level_data = self.read_level_file(1)
-        self.width_height_px =  len(self.level_data[0])*self.CASE_SIZE,len(self.level_data)*self.CASE_SIZE 
+        self.width_height_px = len(self.level_data[0])*self.CASE_SIZE,len(self.level_data)*self.CASE_SIZE
         
         # Pour optimiser, on fait en sorte de calculer de créer la map en entier pour évité de la refaire (donc + de performance)
         self.map_to_render = pygame.Surface((self.width_height_px[0], self.width_height_px[1]))
@@ -36,6 +34,7 @@ class Maze:
 
         self.ghost_registry = {}
         self.ghosts_checkpoints = {}
+        self.ghosts_spawn = {}
         self.pacgoms = []
         self.super_pacgoms = []
         # Nous allons faire une surface pour faire le rendue des pacgom qu'on va changer a chaque fois qu'on en enlève pour gagner des FPS (mais on laisse les superpacgom pour l'animation)
@@ -47,6 +46,11 @@ class Maze:
                             
         self.ai_to_render = pygame.Surface((self.width_height_px[0], self.width_height_px[1]), flags=pygame.SRCALPHA) 
         self.calcul_ai_grid(self.pacman.maze_pos)
+
+        self.blinky_spawn_ai_grid = self.create_ai_grid_values_to(self.ghosts_spawn["blinky_spawn"])
+        self.pinky_spawn_ai_grid = self.create_ai_grid_values_to(self.ghosts_spawn["pinky_spawn"])
+        self.inky_spawn_ai_grid = self.create_ai_grid_values_to(self.ghosts_spawn["inky_spawn"])
+        self.clyde_spawn_ai_grid = self.create_ai_grid_values_to(self.ghosts_spawn["clyde_spawn"])
 
     def remove_pacgom(self, pacgom: Pacgom=None):
         """
@@ -106,12 +110,16 @@ class Maze:
                         self.pacman = Pacman(self.game, (x, y), self.CASE_SIZE)
                     elif v == "P":
                         self.ghost_registry['pinky'] = Pinky(self.game, (x, y), self.CASE_SIZE)
+                        self.ghosts_spawn['pinky_spawn'] = (x, y)
                     elif v == "I":
                         self.ghost_registry['inky'] = Inky(self.game, (x, y), self.CASE_SIZE)
+                        self.ghosts_spawn['inky_spawn'] = (x, y)
                     elif v == "B":
                         self.ghost_registry['blinky'] = Blinky(self.game, (x, y), self.CASE_SIZE)
+                        self.ghosts_spawn['blinky_spawn'] = (x, y)
                     elif v == "C":
                         self.ghost_registry['clyde'] = Clyde(self.game, (x, y), self.CASE_SIZE)
+                        self.ghosts_spawn['clyde_spawn'] = (x, y)
                     elif v == "/":
                         self.ghosts_checkpoints['pinky_checkpoint'] =  (x, y)
                     elif v == "+":
@@ -142,7 +150,7 @@ class Maze:
                     self.map_layout[y][x] = v
     
     def calcul_ai_grid(self, maze_pos):
-        self.ai_grid = [[999]*(len(self.level_data[0])+5) for x in range(len(self.level_data)+5)]  
+        self.ai_grid = [[999]*(len(self.level_data[0])+5) for x in range(len(self.level_data)+5)]
         #self.ai_to_render = pygame.Surface((self.width_height_px[0], self.width_height_px[1]), flags=pygame.SRCALPHA)
         #self.ai_to_render.fill((0,0,0,0))
         i = 1
@@ -171,7 +179,7 @@ class Maze:
                         #self.ai_to_render.blit(pygame.font.SysFont(None,18).render(str(i), True, (255,255,0)), ((p[0])*self.CASE_SIZE+2, (p[1]+1)*self.CASE_SIZE+2))
                 to_treat.append([])                    
                 i += 1
-        self.ai_grid[maze_pos[1]][maze_pos[0]] = 0    
+        self.ai_grid[maze_pos[1]][maze_pos[0]] = 0
         #self.ai_to_render.blit(pygame.font.SysFont(None,18).render(str(0), True, (255,255,0)), ((maze_pos[0])*self.CASE_SIZE+2, (maze_pos[1])*self.CASE_SIZE+2))
 
     def create_ai_grid_values_to(self, target_maze_pos):

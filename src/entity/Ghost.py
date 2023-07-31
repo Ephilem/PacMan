@@ -12,6 +12,7 @@ class Ghost(MovingEntity):
         self.mode = "scattering" # les modes : scattering, chasing, fear, eated        
         self.set_frame_min_max(min=0,max=2)
         self.fear_tick = 0
+        self.is_eated = False
 
         # Cette valeur est utiliser seulement par clyde et quand les fantome sont en mode "peur"
         self.looking_direction = "up"
@@ -37,19 +38,24 @@ class Ghost(MovingEntity):
         if not self.is_moving and self.can_move():
             self.move(self.looking_direction)
             self.rotate(self.looking_direction)
-        
+
+    @abstractmethod
+    def eated_ai(self):
+        pass
 
     def render(self, surface, pos_to_render):
         surface.blit(self.frame, self.get_pos_to_render(pos_to_render))
         self.tick_animation()
         self.tick_movement_system(self)
-        if self.fear_tick != 0:
+        if self.is_eated:
+            self.eated_ai()
+        elif self.fear_tick != 0:
             self.fear_ai()
         else:
             self.tick_ai()
     
     def rotate(self, direction):
-        if not self.mode == "fear":
+        if not self.mode in ["fear", "eated"]:
             if direction == "left":
                 self.set_frame_min_max(min=6,max=7)
             if direction == "right":
@@ -89,8 +95,14 @@ class Ghost(MovingEntity):
             self.set_frame_min_max(min=0,max=1)
             self.change_texture(self.FEAR_GHOST_TEXTURE, True)
 
-
-    
+    def eated(self):
+        """
+        mettre les fantome en mode 'eated'
+        """
+        if self.mode == "fear":
+            self.mode = "eated"
+            self.is_eated = True
+            self.change_max_sleep_tick(10)
 
     # Fontion de mouvement aléatoire pour le mode fear (car quand le fantome à peur, et bas il se déplace aléatoirement)
     def is_blocked(self):

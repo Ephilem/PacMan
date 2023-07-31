@@ -20,12 +20,15 @@ class Blinky(Ghost):
                 self.move_with_ai_grid(self.ai_grid_values_to_checkpoint)
             if self.maze_pos == self.game.maze.ghosts_checkpoints["blinky_checkpoint"]:
                 self.mode = "chasing"
-           
 
-            
-
-
-        pass
+    def eated_ai(self):
+        self.move_with_ai_grid(self.game.maze.blinky_spawn_ai_grid)
+        if self.maze_pos == self.game.maze.ghosts_spawn["blinky_spawn"]:
+            self.mode = "chasing"
+            self.is_eated = False
+            self.change_max_sleep_tick(15)
+            self.change_texture(self.GHOST_TEXTURE, True)
+            self.rotate(self.looking_direction)
     
     def get_ai_value(self, ai_grid, maze_pos):
         return ai_grid[maze_pos[1]][maze_pos[0]]

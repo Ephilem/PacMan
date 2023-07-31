@@ -54,3 +54,12 @@ class Clyde(Ghost):
     # def get_opposite_direction(self, direction):
     #     a = {'left': 'right', 'right': 'left', 'up': 'down', 'down': 'up'}
     #     return a[direction]
+
+    def eated_ai(self):
+        self.move_with_ai_grid(self.game.maze.clyde_spawn_ai_grid)
+        if self.maze_pos == self.game.maze.ghosts_spawn["clyde_spawn"]:
+            self.mode = "chasing"
+            self.is_eated = False
+            self.change_max_sleep_tick(15)
+            self.change_texture(self.GHOST_TEXTURE, True)
+            self.rotate(self.looking_direction)

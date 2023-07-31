@@ -26,6 +26,7 @@ class Pacman(MovingEntity):
             # Vérif si il y a une super pacgom où pacman se déplace
             potential_super_pacgom = [x for x in self.game.maze.super_pacgoms if x.maze_pos == self.moving_to]
             if len(potential_super_pacgom) != 0:
+                print("super pacgom eated")
                 self.game.maze.super_pacgoms.remove(potential_super_pacgom[0])
                 self.game.maze.set_ghosts_fear_mode()
 
@@ -36,15 +37,14 @@ class Pacman(MovingEntity):
             ghost_size = ghost.textures[0].get_size()
             pacman_pos = [x*self.case_size for x in self.maze_pos]
             pacman_size = self.textures[0].get_size()
-            if not ghost.mode in ["fear","eated"] and self.game.game_stat == "playing" and (pacman_pos[0] < ghost_pos[0] + ghost_size[0]) and (ghost_pos[0] < pacman_pos[0] + pacman_size[0]) and (pacman_pos[1] < ghost_pos[1] + ghost_size[1]) and (ghost_pos[1] < pacman_pos[1] + pacman_size[1]) :
-                self.game.game_stat = "losing"
-            
-
-
+            if self.game.game_stat == "playing" and (pacman_pos[0] < ghost_pos[0] + ghost_size[0]) and (ghost_pos[0] < pacman_pos[0] + pacman_size[0]) and (pacman_pos[1] < ghost_pos[1] + ghost_size[1]) and (ghost_pos[1] < pacman_pos[1] + pacman_size[1]) :
+                if not ghost.mode in ["fear","eated"]:
+                    self.game.game_stat = "losing"
+                elif ghost.mode == "fear":
+                    ghost.eated()
 
         # IA (car render fait aussi office de ticking) #
         # MOUVEMENT : les touches
-
         if pygame.key.get_pressed()[pygame.K_LEFT] and self.game.maze.get_map_element((self.maze_pos[0]-1, self.maze_pos[1])) == "0":
             self.direction_to_go = "left"  
         elif pygame.key.get_pressed()[pygame.K_RIGHT] and self.game.maze.get_map_element((self.maze_pos[0]+1, self.maze_pos[1])) == "0":

@@ -17,7 +17,7 @@ class Endscreen():
         if end_origin == "win":
             end_text = "Vous avez gagné!"
         elif end_origin == "loose":
-            end_text = "L + ratio + tnul"
+            end_text = "Game Over !"
         # généré le texte
         end_text_font = pygame.font.SysFont(None,48)
         maze_size = game.maze.width_height_px

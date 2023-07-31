@@ -50,3 +50,12 @@ class Pinky(Ghost):
             if not (0 <= final[1] and final[1] < len(self.game.maze.map_layout[0])):
                 return self.shift_maze_pos_with_direction(direction, shift-1, base_maze_pos)
         return final
+
+    def eated_ai(self):
+        self.move_with_ai_grid(self.game.maze.pinky_spawn_ai_grid)
+        if self.maze_pos == self.game.maze.ghosts_spawn["pinky_spawn"]:
+            self.mode = "chasing"
+            self.is_eated = False
+            self.change_max_sleep_tick(15)
+            self.change_texture(self.GHOST_TEXTURE, True)
+            self.rotate(self.looking_direction)
